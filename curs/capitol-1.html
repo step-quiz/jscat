@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítol 1 — Hola, JavaScript! | JSCat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="curs.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button id="sidebar-toggle" aria-label="Mostra/amaga els capítols" aria-expanded="false">☰</button>
+  <div class="logo">
+    <span class="logo-icon"></span>
+    <span>JSCat</span>
+  </div>
+  <nav class="topbar-nav">
+    <a href="capitol-1.html" class="topbar-nav-link active">Capítols</a>
+    <a href="repte-1.html" class="topbar-nav-link">Reptes</a>
+    <a href="../index.html" class="topbar-nav-link">Simulador</a>
+  </nav>
+  <div class="topbar-actions"></div>
+</header>
+
+<div class="curs-layout">
+  <div id="sidebar-overlay" aria-hidden="true"></div>
+  <nav id="sidebar" class="curs-sidebar" aria-label="Capítols del curs">
+    <div id="sidebar-nav"></div>
+  </nav>
+
+  <main class="curs-content">
+    <div class="chapter-content-inner">
+
+
+      <!-- ─────────────────────────────────────────
+           CAPÇALERA
+           ───────────────────────────────────────── -->
+      <header class="chapter-header">
+        <span class="chapter-badge">Capítol 1</span>
+        <h1>Hola, JavaScript!</h1>
+        <p class="chapter-lead">En aquest curs aprendràs a escriure codi <strong>JavaScript</strong>, el llenguatge del navegador.</p>
+      </header>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 1 — console.log()
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2><code>console.log()</code></h2>
+
+        <p><code>console.log()</code> és la instrucció més bàsica de JavaScript per mostrar coses. Rep un text entre cometes i el mostra a la consola.</p>
+
+        <p>Prem <strong>▶ Executa</strong> i observa què apareix a la consola:</p>
+
+        <div class="simulador"
+             data-code='console.log("Hola, món!");'
+             data-readonly="true"
+             data-height="220">
+        </div>
+
+        <p>La consola mostra <code>Hola, món!</code> — exactament el text que hi havia dins de les cometes. El text que va entre cometes s'anomena <strong>string</strong> (és a dir, cadena de caràcters).</p>
+
+        <p>Fixa't en el <code>;</code> al final. En JavaScript, cada instrucció s'acostuma a acabar amb un <strong>punt i coma</strong>. No sempre és obligatori, però és una bona pràctica posar-lo.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 2 — Strings i cometes
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Strings i cometes</h2>
+
+        <p>Un string sempre va envoltat de cometes. En JavaScript pots fer servir:</p>
+        <ul>
+          <li>Cometes dobles: <code>"text"</code></li>
+          <li>Cometes simples: <code>'text'</code></li>
+          <li>Cometes invertides (backticks): <code>`text`</code></li>
+        </ul>
+
+        <p>Les tres opcions funcionen exactament igual:</p>
+
+        <div class="simulador"
+             data-code='console.log("Hola amb cometes dobles");
+console.log(&apos;Hola amb cometes simples&apos;);
+console.log(`Hola amb cometes invertides`);'
+             data-readonly="true"
+             data-height="240">
+        </div>
+
+        <p>Una regla pràctica: si el teu text conté un apòstrof (com a «m'agrada»), fes servir cometes dobles per envoltar-lo. Així JavaScript comprèn bé la sintaxi.</p>
+
+        <div class="simulador"
+             data-code='console.log("M&apos;agrada programar!");'
+             data-readonly="true"
+             data-height="200">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 3 — Seqüència
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Seqüència: un <code>console.log()</code> rere l'altre</h2>
+
+        <p>Pots encadenar diverses crides a <code>console.log()</code>. JavaScript les executa en ordre, de dalt a baix. Cada crida escriu en una línia nova.</p>
+
+        <div class="simulador"
+             data-code='console.log("Primera línia");
+console.log("Segona línia");
+console.log("Tercera línia");'
+             data-readonly="true"
+             data-height="240">
+        </div>
+
+        <p>L'ordre importa: la seqüència d'instruccions determina el resultat. Si canvies l'ordre dels <code>console.log()</code>, canvia l'ordre de les línies a la consola.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 4 — Comentaris
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Comentaris: <code>//</code></h2>
+
+        <p>Tot el que va després de <code>//</code> a una línia és ignorat per JavaScript. Els comentaris són notes per a tu (i per a qui llegeixi el teu codi).</p>
+
+        <div class="simulador"
+             data-code='// Això és un comentari, JavaScript ho ignora
+console.log("Això sí que es mostra");
+// console.log("Això NO es mostra, està comentat");'
+             data-readonly="true"
+             data-height="240">
+        </div>
+
+        <p>Comentar una línia de codi és útil per desactivar-la temporalment sense esborrar-la. Només cal posar <code>//</code> al davant.</p>
+
+        <p>També existeix el comentari de <strong>bloc</strong>, que pot ocupar diverses línies, amb <code>/*</code> per obrir i <code>*/</code> per tancar:</p>
+
+        <div class="simulador"
+             data-code='/*
+   Això és un comentari de bloc.
+   Pot ocupar diverses línies.
+*/
+console.log("Hola!");'
+             data-readonly="true"
+             data-height="240">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 5 — Errors
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Els errors no són fracassos</h2>
+
+        <p>Quan escrius codi incorrecte, JavaScript s'atura i mostra un missatge d'error a la consola. L'error indica <em>exactament</em> què ha passat. Què cal fer? Es llegeix, es corregeix i es torna a provar.</p>
+
+        <p>L'exemple següent té un error deliberat — falta una cometa de tancament. Executa'l i observa el missatge d'error:</p>
+
+        <div class="simulador"
+             data-code='console.log("Hola, món!);'
+             data-readonly="false"
+             data-height="220">
+        </div>
+
+        <p>Corregeix l'error afegint la cometa que falta i torna a executar. Quan programes, veuràs errors constantment — és completament normal.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 6 — console.log amb números i diversos valors
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Més usos de <code>console.log()</code></h2>
+
+        <p><code>console.log()</code> pot mostrar moltes coses, no només text. Pot mostrar nombres directament, és a dir, no cal fer ús de les cometes.</p>
+
+        <div class="simulador"
+             data-code='console.log(42);
+console.log(3.14);
+console.log("La resposta és", 42);'
+             data-readonly="true"
+             data-height="240">
+        </div>
+
+        <p>Fixa't en la tercera línia: si passes diversos valors a <code>console.log()</code> separats per comes, JavaScript els mostra tots en la mateixa línia, amb un espai entre ells.</p>
+
+        <p>A més, <code>console.log()</code> sense cap argument imprimeix una línia buida. Això és útil per a separar visualment la sortida:</p>
+
+        <div class="simulador"
+             data-code='console.log("Bloc 1");
+console.log();
+console.log("Bloc 2");'
+             data-readonly="true"
+             data-height="230">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           EXERCICI
+           ───────────────────────────────────────── -->
+      <section class="chapter-section chapter-exercise">
+        <h2>Exercici</h2>
+
+        <div class="exercise-enunciat">
+          Escriu un programa que imprimeixi <strong>exactament</strong> aquestes quatre línies. Fixa't que la tercera línia és buida:
+        </div>
+
+        <pre class="code-example">Em dic JSCat.
+Tinc 0 anys.
+
+Aprendrem JavaScript junts!</pre>
+
+        <div class="simulador"
+             data-code="// Escriu el teu codi aquí:
+
+"
+             data-expected="Em dic JSCat.
+Tinc 0 anys.
+
+Aprendrem JavaScript junts!"
+             data-goal-id="cap-1-ex"
+             data-height="320">
+        </div>
+      </section>
+
+
+      <section class="chapter-section">
+        <h2>Resum</h2>
+        <p>Has après quatre coses en aquest capítol:</p>
+        <ul>
+          <li><code>console.log("text")</code> — mostra text a la consola.</li>
+          <li>Els strings van entre cometes dobles <code>"..."</code>, simples <code>'...'</code> o invertides <code>`...`</code>.</li>
+          <li><code>//</code> — marca un comentari de línia (JavaScript l'ignora). <code>/* ... */</code> — comentari de bloc.</li>
+          <li>Pots passar diversos valors a <code>console.log()</code> separats per comes.</li>
+        </ul>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           NAVEGACIÓ
+           ───────────────────────────────────────── -->
+      <nav class="chapter-nav" aria-label="Navegació entre capítols">
+        <a href="index.html" class="btn-nav btn-nav--prev">← Índex</a>
+        <a href="capitol-2.html" class="btn-nav btn-nav--next">Capítol següent →</a>
+      </nav>
+
+
+    </div>
+  </main>
+</div>
+
+<script src="capitols.js"></script>
+<script>
+  injectCursLogo();
+  renderSidebar(1);
+  renderSimuladors();
+  initSidebarToggle();
+</script>
+
+<script src="../footer.js"></script>
+</body>
+</html>
