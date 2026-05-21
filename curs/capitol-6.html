@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítol 6 — Arrays | JSCat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="curs.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button id="sidebar-toggle" aria-label="Mostra/amaga els capítols" aria-expanded="false">☰</button>
+  <div class="logo">
+    <span class="logo-icon"></span>
+    <span>JSCat</span>
+  </div>
+  <nav class="topbar-nav">
+    <a href="capitol-1.html" class="topbar-nav-link active">Capítols</a>
+    <a href="repte-1.html" class="topbar-nav-link">Reptes</a>
+    <a href="../index.html" class="topbar-nav-link">Simulador</a>
+  </nav>
+  <div class="topbar-actions"></div>
+</header>
+
+<div class="curs-layout">
+  <div id="sidebar-overlay" aria-hidden="true"></div>
+  <nav id="sidebar" class="curs-sidebar" aria-label="Capítols del curs">
+    <div id="sidebar-nav"></div>
+  </nav>
+
+  <main class="curs-content">
+    <div class="chapter-content-inner">
+
+
+      <!-- ─────────────────────────────────────────
+           CAPÇALERA
+           ───────────────────────────────────────── -->
+      <header class="chapter-header">
+        <span class="chapter-badge">Capítol 6</span>
+        <h1>Arrays</h1>
+        <p class="chapter-lead">Fins ara les variables guardaven un sol valor. Però sovint necessites guardar-ne molts: una llista de noms, els resultats d'un examen, les compres del dia… Un <strong>array</strong> és una variable que conté molts valors ordenats, accessibles per la seva posició.</p>
+      </header>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 1 — Crear un array
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Crear un array</h2>
+
+        <p>Un array s'escriu amb claudàtors <code>[ ]</code> i els valors separats per comes:</p>
+
+        <div class="simulador"
+             data-code='const fruites = ["poma", "pera", "plàtan"];
+console.log(fruites);
+
+const notes = [7, 8, 6, 9, 5];
+console.log(notes);'
+             data-readonly="true"
+             data-height="240">
+        </div>
+
+        <p>Pots posar dins un array qualsevol tipus de valors: nombres, strings, booleans… i fins i tot mesclar-los, encara que normalment no t'interessa.</p>
+
+        <p>Un array buit s'escriu <code>[]</code>. És útil per anar-hi afegint coses després:</p>
+
+        <div class="simulador"
+             data-code='const buidet = [];
+console.log(buidet);'
+             data-readonly="true"
+             data-height="200">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 2 — Accedir per índex
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Accedir als elements per índex</h2>
+
+        <p>Cada element de l'array té una <strong>posició</strong> (un <em>índex</em>), que comença a <strong>0</strong> per al primer element. Accedeixes a un element posant l'índex entre claudàtors:</p>
+
+        <div class="simulador"
+             data-code='const fruites = ["poma", "pera", "plàtan"];
+console.log(fruites[0]);
+console.log(fruites[1]);
+console.log(fruites[2]);'
+             data-readonly="true"
+             data-height="260">
+        </div>
+
+        <p>És molt important recordar-ho: <strong>la primera posició és la 0, no la 1</strong>. Si l'array té 3 elements, les posicions vàlides són 0, 1 i 2.</p>
+
+        <p>Què passa si demanes una posició que no existeix? A diferència d'altres llenguatges, JavaScript <em>no peta</em>. Simplement retorna <code>undefined</code>:</p>
+
+        <div class="simulador"
+             data-code='const fruites = ["poma", "pera", "plàtan"];
+console.log(fruites[10]);   // no existeix!'
+             data-readonly="true"
+             data-height="220">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 3 — length
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>La longitud: <code>.length</code></h2>
+
+        <p>Tots els arrays tenen una propietat <code>.length</code> que et diu quants elements contenen:</p>
+
+        <div class="simulador"
+             data-code='const fruites = ["poma", "pera", "plàtan"];
+console.log(fruites.length);
+
+const notes = [7, 8, 6, 9, 5];
+console.log(notes.length);
+
+const buidet = [];
+console.log(buidet.length);'
+             data-readonly="true"
+             data-height="280">
+        </div>
+
+        <p>Fixa't que <code>.length</code> no porta parèntesis — és una propietat, no una funció. <strong>NO</strong> escriguis <code>fruites.length()</code>.</p>
+
+        <p>Combinant <code>.length</code> amb el que ja saps, pots accedir a l'<strong>últim element</strong> d'un array sigui quina sigui la seva mida:</p>
+
+        <div class="simulador"
+             data-code='const fruites = ["poma", "pera", "plàtan", "kiwi", "raïm"];
+const ultim = fruites[fruites.length - 1];
+console.log(ultim);'
+             data-readonly="true"
+             data-height="240">
+        </div>
+
+        <p>Si l'array té 5 elements, <code>fruites.length</code> és 5, i l'últim índex vàlid és <code>5 - 1 = 4</code>. Per això accedim a la posició <code>fruites.length - 1</code>.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 4 — Modificar elements
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Modificar elements</h2>
+
+        <p>Pots canviar el valor d'un element posant l'índex a l'esquerra del <code>=</code>:</p>
+
+        <div class="simulador"
+             data-code='const fruites = ["poma", "pera", "plàtan"];
+fruites[1] = "kiwi";
+console.log(fruites);'
+             data-readonly="true"
+             data-height="240">
+        </div>
+
+        <p>Sorpresa important: l'array s'ha declarat amb <code>const</code> i tot i així hem pogut modificar-ne un element! Per què no hi ha error?</p>
+
+        <p>El motiu és subtil: <code>const</code> bloqueja <strong>la variable</strong> (no pots fer <code>fruites = [...]</code> per assignar-li un array nou), però <strong>no bloqueja el contingut</strong> de l'array. És una distinció important. Mira els dos casos:</p>
+
+        <div class="simulador"
+             data-code='const fruites = ["poma", "pera"];
+fruites[0] = "kiwi";       // OK: modifiquem el contingut
+console.log(fruites);
+
+fruites = ["taronja"];     // ERROR: reassignem la variable'
+             data-readonly="false"
+             data-height="280">
+        </div>
+
+        <p>El primer canvi funciona, el segon dona <code>TypeError</code>. A la pràctica, fes servir <code>const</code> per a la majoria d'arrays — pràcticament mai no necessitaràs reassignar la variable sencera.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 5 — push i pop
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Afegir i treure elements: <code>.push()</code> i <code>.pop()</code></h2>
+
+        <p>Per afegir un element al <strong>final</strong> d'un array, fas servir <code>.push()</code>:</p>
+
+        <div class="simulador"
+             data-code='const fruites = ["poma", "pera"];
+fruites.push("plàtan");
+fruites.push("kiwi");
+console.log(fruites);
+console.log("Tinc", fruites.length, "fruites.");'
+             data-readonly="true"
+             data-height="280">
+        </div>
+
+        <p>Per <strong>treure</strong> l'últim element, fas servir <code>.pop()</code>:</p>
+
+        <div class="simulador"
+             data-code='const fruites = ["poma", "pera", "plàtan"];
+const ultima = fruites.pop();
+console.log("Hem tret:", ultima);
+console.log("Queda:", fruites);'
+             data-readonly="true"
+             data-height="260">
+        </div>
+
+        <p><code>.pop()</code> retorna l'element que ha tret, per si vols fer-hi alguna cosa. Si l'array està buit, retorna <code>undefined</code>.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 6 — Iterar
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Recórrer un array amb un bucle</h2>
+
+        <p>La combinació array + bucle és poderosíssima: et permet fer alguna cosa a cada element. La manera més habitual és amb <code>for</code> i un comptador que va de 0 fins a <code>.length - 1</code>:</p>
+
+        <div class="simulador"
+             data-code='const notes = [7, 8, 6, 9, 5];
+for (let i = 0; i < notes.length; i++) {
+  console.log("Nota", i + 1, ":", notes[i]);
+}'
+             data-readonly="true"
+             data-height="280">
+        </div>
+
+        <p>JavaScript també ofereix una forma més curta quan només necessites els <em>valors</em> i no els índexs: el bucle <code>for...of</code>:</p>
+
+        <div class="simulador"
+             data-code='const notes = [7, 8, 6, 9, 5];
+for (const nota of notes) {
+  console.log(nota);
+}'
+             data-readonly="true"
+             data-height="260">
+        </div>
+
+        <p>Llegeix-ho: <em>«per cada <code>nota</code> de <code>notes</code>, imprimeix-la»</em>. La variable <code>nota</code> pren un valor diferent a cada iteració: primer <code>7</code>, després <code>8</code>, etc.</p>
+
+        <p>Tria una opció o l'altra segons les teves necessitats:</p>
+        <ul>
+          <li>Si només et calen els <strong>valors</strong>, fes servir <code>for...of</code>.</li>
+          <li>Si et cal l'<strong>índex</strong> (per exemple, per modificar elements o accedir a dos arrays alhora), fes servir <code>for</code> clàssic.</li>
+        </ul>
+
+        <p>Exemple del segon cas: calcular la suma de totes les notes amb un acumulador:</p>
+
+        <div class="simulador"
+             data-code='const notes = [7, 8, 6, 9, 5];
+let suma = 0;
+for (const nota of notes) {
+  suma += nota;
+}
+console.log("Suma:", suma);
+console.log("Mitjana:", suma / notes.length);'
+             data-readonly="true"
+             data-height="300">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 7 — Mètodes útils
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Tres mètodes útils més</h2>
+
+        <p><strong><code>.includes(valor)</code></strong> — diu si l'array conté o no el valor (retorna <code>true</code> o <code>false</code>):</p>
+
+        <div class="simulador"
+             data-code='const fruites = ["poma", "pera", "plàtan"];
+console.log(fruites.includes("pera"));
+console.log(fruites.includes("síndria"));'
+             data-readonly="true"
+             data-height="240">
+        </div>
+
+        <p><strong><code>.indexOf(valor)</code></strong> — retorna l'índex on es troba el valor, o <code>-1</code> si no hi és:</p>
+
+        <div class="simulador"
+             data-code='const fruites = ["poma", "pera", "plàtan"];
+console.log(fruites.indexOf("plàtan"));
+console.log(fruites.indexOf("síndria"));'
+             data-readonly="true"
+             data-height="240">
+        </div>
+
+        <p><strong><code>.join(separador)</code></strong> — ajunta tots els elements en un sol string, separats pel que tu vulguis:</p>
+
+        <div class="simulador"
+             data-code='const fruites = ["poma", "pera", "plàtan"];
+console.log(fruites.join(", "));
+console.log(fruites.join(" - "));
+console.log(fruites.join(""));'
+             data-readonly="true"
+             data-height="260">
+        </div>
+
+        <p><code>.join()</code> és molt útil per imprimir un array de forma agradable, sense els claudàtors i les cometes.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 8 — Errors típics
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Errors típics</h2>
+
+        <p><strong>1. Confondre <code>.length</code> amb una funció</strong> — recorda que NO porta parèntesis:</p>
+
+        <div class="simulador"
+             data-code='const arr = [1, 2, 3];
+console.log(arr.length());'
+             data-readonly="true"
+             data-height="220">
+        </div>
+
+        <p>Surt <code>TypeError</code>: <code>length</code> és un nombre, no una funció. Has d'escriure <code>arr.length</code> sense parèntesis.</p>
+
+        <p><strong>2. Voler accedir a l'últim element com a <code>arr[-1]</code></strong> — això funciona en algunes llengües (Python, per exemple), però no en JavaScript:</p>
+
+        <div class="simulador"
+             data-code='const arr = ["a", "b", "c"];
+console.log(arr[-1]);   // No funciona com t&apos;esperes
+console.log(arr[arr.length - 1]);   // Aquesta és la manera correcta'
+             data-readonly="true"
+             data-height="260">
+        </div>
+
+        <p>L'índex <code>-1</code> simplement no existeix en JavaScript: retorna <code>undefined</code>.</p>
+
+        <p><strong>3. Anar fora dels límits sense adonar-se'n</strong> — JavaScript NO et dona error si accedeixes a un índex que no existeix, simplement retorna <code>undefined</code>. Si fas un bucle malament, pots produir sortides estranyes sense entendre per què:</p>
+
+        <div class="simulador"
+             data-code='const arr = [10, 20, 30];
+// ERROR: anem fins a length (inclòs), però l&apos;índex màxim és length - 1
+for (let i = 0; i <= arr.length; i++) {
+  console.log(arr[i]);
+}'
+             data-readonly="true"
+             data-height="280">
+        </div>
+
+        <p>La sortida acaba amb un <code>undefined</code> sospitós. La condició del bucle hauria de ser <code>i &lt; arr.length</code> (estrictament menor), no <code>&lt;=</code>.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           EXERCICI
+           ───────────────────────────────────────── -->
+      <section class="chapter-section chapter-exercise">
+        <h2>Exercici</h2>
+
+        <div class="exercise-enunciat">
+          Llegeix <strong>5 nombres</strong> de l'usuari (un per línia), guarda'ls en un array, i imprimeix la suma i el màxim amb aquest format exacte:
+        </div>
+
+        <pre class="code-example">Suma: 16
+Màxim: 10</pre>
+
+        <p>Hauràs de combinar tot el que has après: arrays, bucles, <code>.push()</code>, <code>Number(prompt(...))</code>, i una mica de lògica per trobar el màxim.</p>
+
+        <div class="simulador"
+             data-code='const nums = [];
+// 1) Llegeix 5 nombres i posa&apos;ls a l&apos;array nums:
+
+
+// 2) Calcula la suma i el màxim:
+
+
+// 3) Imprimeix els resultats:
+
+'
+             data-tests='[
+               {"stdin": "1\n2\n3\n4\n5",     "expected": "Suma: 15\nMàxim: 5"},
+               {"stdin": "10\n3\n8\n4\n6",    "expected": "Suma: 31\nMàxim: 10"},
+               {"stdin": "7\n5\n9\n2\n9",     "expected": "Suma: 32\nMàxim: 9"}
+             ]'
+             data-goal-id="cap-6-ex"
+             data-height="400">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           RESUM
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Resum</h2>
+        <ul>
+          <li>Un <strong>array</strong> conté molts valors ordenats: <code>const arr = [10, 20, 30];</code>.</li>
+          <li>S'accedeix per <strong>índex</strong>, començant a <code>0</code>: <code>arr[0]</code>.</li>
+          <li>Un índex fora de rang retorna <code>undefined</code> (no dona error).</li>
+          <li><code>arr.length</code> és el nombre d'elements (sense parèntesis!).</li>
+          <li>L'últim element és <code>arr[arr.length - 1]</code>.</li>
+          <li><code>arr.push(x)</code> afegeix al final; <code>arr.pop()</code> treu i retorna l'últim.</li>
+          <li>Per recórrer: <code>for (let i = 0; i &lt; arr.length; i++)</code> o <code>for (const x of arr)</code>.</li>
+          <li>Mètodes útils: <code>.includes()</code>, <code>.indexOf()</code>, <code>.join()</code>.</li>
+          <li><code>const</code> bloqueja la variable però <strong>no</strong> el contingut: pots modificar elements i fer <code>push</code>/<code>pop</code>, però no reassignar tot l'array.</li>
+        </ul>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           NAVEGACIÓ
+           ───────────────────────────────────────── -->
+      <nav class="chapter-nav" aria-label="Navegació entre capítols">
+        <a href="capitol-5.html" class="btn-nav btn-nav--prev">← Capítol anterior</a>
+        <a href="capitol-7.html" class="btn-nav btn-nav--next">Capítol següent →</a>
+      </nav>
+
+
+    </div>
+  </main>
+</div>
+
+<script src="capitols.js"></script>
+<script>
+  injectCursLogo();
+  renderSidebar(6);
+  renderSimuladors();
+  initSidebarToggle();
+</script>
+
+<script src="../footer.js"></script>
+</body>
+</html>
