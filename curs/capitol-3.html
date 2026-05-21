@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítol 3 — Operacions i text | JSCat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="curs.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button id="sidebar-toggle" aria-label="Mostra/amaga els capítols" aria-expanded="false">☰</button>
+  <div class="logo">
+    <span class="logo-icon"></span>
+    <span>JSCat</span>
+  </div>
+  <nav class="topbar-nav">
+    <a href="capitol-1.html" class="topbar-nav-link active">Capítols</a>
+    <a href="repte-1.html" class="topbar-nav-link">Reptes</a>
+    <a href="../index.html" class="topbar-nav-link">Simulador</a>
+  </nav>
+  <div class="topbar-actions"></div>
+</header>
+
+<div class="curs-layout">
+  <div id="sidebar-overlay" aria-hidden="true"></div>
+  <nav id="sidebar" class="curs-sidebar" aria-label="Capítols del curs">
+    <div id="sidebar-nav"></div>
+  </nav>
+
+  <main class="curs-content">
+    <div class="chapter-content-inner">
+
+
+      <!-- ─────────────────────────────────────────
+           CAPÇALERA
+           ───────────────────────────────────────── -->
+      <header class="chapter-header">
+        <span class="chapter-badge">Capítol 3</span>
+        <h1>Operacions i text</h1>
+        <p class="chapter-lead">JavaScript pot fer càlculs matemàtics i pot demanar dades a l'usuari. Combinant les dues coses, podràs fer programes que rebin informació numèrica, la processin i mostrin el resultat.</p>
+      </header>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 1 — Operacions aritmètiques
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Operacions aritmètiques</h2>
+
+        <p>JavaScript pot fer les operacions matemàtiques habituals. Les escrius com ho faries en una calculadora:</p>
+
+        <div class="simulador"
+             data-code='console.log(10 + 3);
+console.log(10 - 3);
+console.log(10 * 3);
+console.log(10 / 3);'
+             data-readonly="true"
+             data-height="280">
+        </div>
+
+        <p>Hi ha dues operacions menys habituals que també són molt útils:</p>
+
+        <div class="simulador"
+             data-code='console.log(10 % 3);    // Residu de la divisió
+console.log(2 ** 10);    // Potència (2 elevat a 10)'
+             data-readonly="true"
+             data-height="220">
+        </div>
+
+        <p>El residu <code>%</code> retorna el que sobra d'una divisió entera. La potència <code>**</code> fa l'exponenciació.</p>
+
+        <p>Si vols la <strong>divisió entera</strong> (sense decimals), pots fer servir <code>Math.floor()</code>, que arrodoneix cap avall:</p>
+
+        <div class="simulador"
+             data-code='console.log(10 / 3);
+console.log(Math.floor(10 / 3));'
+             data-readonly="true"
+             data-height="220">
+        </div>
+
+        <p><code>Math</code> és un objecte que conté moltes funcions matemàtiques (<code>Math.sqrt</code>, <code>Math.abs</code>, <code>Math.random</code>…). En veurem més al llarg del curs.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 2 — Operacions amb variables
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Operacions amb variables</h2>
+
+        <p>Les operacions es poden fer directament amb variables. Això és el que converteix JavaScript en una eina poderosa — pots guardar dades, operar-hi i mostrar el resultat:</p>
+
+        <div class="simulador"
+             data-code='const base = 5;
+const altura = 3;
+const area = base * altura;
+console.log(`Un rectangle de ${base}x${altura} té àrea ${area}`);'
+             data-readonly="true"
+             data-height="280">
+        </div>
+
+        <p>Primer es creen les variables <code>base</code> i <code>altura</code>. Després es calcula <code>base * altura</code> i es guarda el resultat a <code>area</code>. Finalment, es mostra tot amb una template literal.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 3 — Operacions amb strings
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Operacions amb strings</h2>
+
+        <p>Podem realitzar operacions amb cadenes de caràcters, encara que els símbols tenen significats diferents que amb nombres:</p>
+
+        <div class="simulador"
+             data-code='const nom = "JS";
+const cognom = "Cat";
+console.log(nom + cognom);
+console.log(nom + " " + cognom);
+console.log("Ha! ".repeat(3));'
+             data-readonly="true"
+             data-height="280">
+        </div>
+
+        <p>El <code>+</code> entre strings els <strong>concatena</strong> (enganxa).</p>
+
+        <p>Per <strong>repetir</strong> un string, els strings tenen un mètode <code>.repeat(n)</code>. Fixa't que en JavaScript, a diferència d'altres llenguatges, l'operador <code>*</code> NO repeteix strings — només multiplica nombres.</p>
+
+        <p>Atenció a aquesta sorpresa: si combines un string amb un nombre usant <code>+</code>, JavaScript converteix automàticament el nombre a text. Executa l'exemple i fixa-t'hi:</p>
+
+        <div class="simulador"
+             data-code='const edat = 16;
+console.log("Tinc " + edat + " anys");
+
+console.log("2 + 3 = " + 2 + 3);'
+             data-readonly="true"
+             data-height="240">
+        </div>
+
+        <p>La primera línia funciona com t'esperaries: <code>"Tinc 16 anys"</code>.</p>
+
+        <p>Però la segona línia mostra <code>"2 + 3 = 23"</code>, no <code>"2 + 3 = 5"</code>! L'explicació és que JavaScript llegeix d'esquerra a dreta: primer <code>"2 + 3 = "</code> + <code>2</code>, que dona el text <code>"2 + 3 = 2"</code>, i després afegeix el <code>3</code>, que dona <code>"2 + 3 = 23"</code>. Per evitar aquesta confusió, fes servir <strong>template literals</strong>, que sempre fan el que tu esperaries:</p>
+
+        <div class="simulador"
+             data-code='console.log(`2 + 3 = ${2 + 3}`);'
+             data-readonly="true"
+             data-height="200">
+        </div>
+
+        <p>Dins de les claus <code>${...}</code> de la template literal, l'operació <code>2 + 3</code> es calcula primer, així que el resultat és <code>"2 + 3 = 5"</code>, que és el que volies.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 4 — prompt()
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Demanar dades: <code>prompt()</code></h2>
+
+        <p>Fins ara tots els valors estaven escrits directament al codi. Però un programa de veritat sovint necessita rebre dades de fora. La funció <code>prompt()</code> demana una línia de text a l'usuari. Pots passar-li un missatge perquè l'usuari sàpiga què escriure: <code>prompt("Com et dius?")</code>.</p>
+
+        <p>Al simulador, l'entrada de l'usuari es prepara abans d'executar (en un panell que apareix a sota de la consola, o ja preparada per a tu en aquests exemples). Prem Executa:</p>
+
+        <div class="simulador"
+             data-code='const nom = prompt("Com et dius?");
+console.log(`Hola, ${nom}!`);'
+             data-stdin="Ada"
+             data-readonly="true"
+             data-height="240">
+        </div>
+
+        <p>L'usuari ha respost <code>Ada</code>, i el programa l'ha desat dins la variable <code>nom</code>.</p>
+
+        <p>Una cosa molt important: <code>prompt()</code> <strong>sempre retorna un string</strong>, encara que l'usuari escrigui un número. Això és font de molts errors quan no ho tens en compte.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 5 — Convertir tipus
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Convertir tipus: <code>Number()</code></h2>
+
+        <p>Mira què passa si intentes operar matemàticament amb un valor que prové d'un <code>prompt()</code>:</p>
+
+        <div class="simulador"
+             data-code='const text = prompt("Escriu un nombre:");
+console.log(text + 10);'
+             data-stdin="7"
+             data-readonly="true"
+             data-height="240">
+        </div>
+
+        <p>Esperaries que sortís <code>17</code>, però surt <code>"710"</code>! El motiu és que <code>text</code> és el <strong>string</strong> <code>"7"</code> (perquè <code>prompt()</code> sempre retorna string), i quan el sumes amb <code>10</code> es fa concatenació, no suma.</p>
+
+        <p>Per solucionar-ho, has de <strong>convertir</strong> el text a nombre amb la funció <code>Number()</code>:</p>
+
+        <div class="simulador"
+             data-code='const text = prompt("Escriu un nombre:");
+const numero = Number(text);
+const doble = numero * 2;
+console.log(`El doble de ${numero} és ${doble}`);'
+             data-stdin="7"
+             data-readonly="true"
+             data-height="280">
+        </div>
+
+        <p>Podem escriure-ho de forma més compacta, fent la conversió directament:</p>
+
+        <div class="simulador"
+             data-code='const n = Number(prompt("Escriu un nombre:"));
+console.log(`El doble de ${n} és ${n * 2}`);'
+             data-stdin="7"
+             data-readonly="true"
+             data-height="220">
+        </div>
+
+        <p>El patró <code>Number(prompt("text"))</code> el veuràs sovint: mostra un missatge a l'usuari, llegeix la resposta i la converteix a nombre en un sol pas.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 6 — Múltiples prompts
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Múltiples entrades</h2>
+
+        <p>Cada crida a <code>prompt()</code> demana una línia nova a l'usuari. Si necessites dos valors, fas dues crides:</p>
+
+        <div class="simulador"
+             data-code='const a = Number(prompt("Primer nombre:"));
+const b = Number(prompt("Segon nombre:"));
+const suma = a + b;
+console.log(`${a} + ${b} = ${suma}`);'
+             data-stdin="5
+3"
+             data-readonly="true"
+             data-height="280">
+        </div>
+
+        <p>Al simulador, les diverses entrades es proporcionen com a línies separades. La primera línia respon al primer <code>prompt()</code>, la segona al segon, etc.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 7 — Posant-ho tot junt
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Posant-ho tot junt</h2>
+
+        <p>Ara ja tens les peces per fer un programa complet: llegir dades, operar-hi i mostrar el resultat. L'exemple següent calcula l'àrea i el perímetre d'un rectangle:</p>
+
+        <div class="simulador"
+             data-code='const base = Number(prompt("Base del rectangle:"));
+const altura = Number(prompt("Altura del rectangle:"));
+const area = base * altura;
+const perimetre = 2 * (base + altura);
+console.log(`Rectangle ${base}x${altura}`);
+console.log(`Àrea: ${area}`);
+console.log(`Perímetre: ${perimetre}`);'
+             data-stdin="8
+5"
+             data-readonly="true"
+             data-height="340">
+        </div>
+
+        <p>Fixa't en l'estructura: <strong>llegir → calcular → mostrar</strong>.<br>Molts programes segueixen aquest patró.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           EXERCICI
+           ───────────────────────────────────────── -->
+      <section class="chapter-section chapter-exercise">
+        <h2>Exercici</h2>
+
+        <div class="exercise-enunciat">
+          Escriu un programa que llegeixi dos nombres (un per línia) i imprimeixi la seva suma, la seva diferència i el seu producte, amb el format exacte que veus a sota.
+        </div>
+
+        <p>El programa rebrà com a entrada els nombres <code>12</code> i <code>4</code>. La sortida ha de ser <strong>exactament</strong>:</p>
+
+        <pre class="code-example">Suma: 16
+Diferència: 8
+Producte: 48</pre>
+
+        <div class="simulador"
+             data-code='// Llegeix els dos nombres (recorda convertir-los amb Number):
+
+
+// Calcula i mostra els resultats:
+
+'
+             data-stdin="12
+4"
+             data-expected="Suma: 16
+Diferència: 8
+Producte: 48"
+             data-goal-id="cap-3-ex"
+             data-height="360">
+        </div>
+      </section>
+
+
+      <section class="chapter-section">
+        <h2>Resum</h2>
+        <ul>
+          <li>JavaScript fa aritmètica amb <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code>, <code>**</code>. Per a divisió entera fas <code>Math.floor(a / b)</code>.</li>
+          <li>Amb strings, <code>+</code> concatena. Per repetir, fas <code>.repeat(n)</code>.</li>
+          <li>Si barreges <code>+</code> entre string i nombre, JavaScript ho converteix tot a string. Fes servir <strong>template literals</strong> per evitar sorpreses.</li>
+          <li><code>prompt("missatge")</code> demana una línia a l'usuari. <strong>Sempre retorna un string</strong>.</li>
+          <li><code>Number()</code> converteix un string a nombre.</li>
+          <li>El patró <code>Number(prompt("text"))</code> demana, llegeix i converteix en un sol pas.</li>
+          <li>Estructura típica d'un programa: <strong>llegir → calcular → mostrar</strong>.</li>
+        </ul>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           NAVEGACIÓ
+           ───────────────────────────────────────── -->
+      <nav class="chapter-nav" aria-label="Navegació entre capítols">
+        <a href="capitol-2.html" class="btn-nav btn-nav--prev">← Capítol anterior</a>
+        <a href="capitol-4.html" class="btn-nav btn-nav--next">Capítol següent →</a>
+      </nav>
+
+
+    </div>
+  </main>
+</div>
+
+<script src="capitols.js"></script>
+<script>
+  injectCursLogo();
+  renderSidebar(3);
+  renderSimuladors();
+  initSidebarToggle();
+</script>
+
+<script src="../footer.js"></script>
+</body>
+</html>

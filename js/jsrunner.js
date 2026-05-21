@@ -47,8 +47,16 @@ const _handlers = {
     J.state.workerReady = true;
   },
   stdout: function(d) {
-    J.consolePush(d.text, 'out');
-    _currentOutput.push(d.text);
+    // Els missatges 'system' (eco de prompt, missatges del prompt())
+    // es mostren visualment en gris, però NO compten per a la validació.
+    // Així el data-expected dels reptes només es compara amb el que
+    // l'alumne imprimeix explícitament amb console.log().
+    if (d.system) {
+      J.consolePush(d.text, 'dim');
+    } else {
+      J.consolePush(d.text, 'out');
+      _currentOutput.push(d.text);
+    }
   },
   stderr: function(d) {
     J.consolePush(d.text, 'err');
@@ -59,6 +67,7 @@ const _handlers = {
     J.consolePush(J.t('log.done') + ' (' + d.elapsed + 'ms)', 'ok');
     J.setStateUI('done');
     _finish(_currentOutput.join('\n'));
+    _respawnWorker();
   },
   error: function(d) {
     _clearTimeoutTimer();
@@ -69,8 +78,24 @@ const _handlers = {
     if (d.line) J.markErrorLine(d.line);
     J.setStateUI('error');
     _finish(null);
+    _respawnWorker();
   }
 };
+
+
+// Després de cada execució (done o error), reiniciem el worker
+// per garantir que la propera execució té un context net.
+// Sense això, declaracions com `let x = 5` persistirien entre execucions
+// i tornar a executar el mateix codi donaria "Identifier already declared".
+function _respawnWorker() {
+  const S = J.state;
+  if (S.worker) {
+    S.worker.terminate();
+    S.worker = null;
+  }
+  S.workerReady = false;
+  _spawnWorker();
+}
 
 
 // ── Helpers de timeout ───────────────────────────────────

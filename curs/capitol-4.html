@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítol 4 — Decisions: if, else if, else | JSCat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="curs.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button id="sidebar-toggle" aria-label="Mostra/amaga els capítols" aria-expanded="false">☰</button>
+  <div class="logo">
+    <span class="logo-icon"></span>
+    <span>JSCat</span>
+  </div>
+  <nav class="topbar-nav">
+    <a href="capitol-1.html" class="topbar-nav-link active">Capítols</a>
+    <a href="repte-1.html" class="topbar-nav-link">Reptes</a>
+    <a href="../index.html" class="topbar-nav-link">Simulador</a>
+  </nav>
+  <div class="topbar-actions"></div>
+</header>
+
+<div class="curs-layout">
+  <div id="sidebar-overlay" aria-hidden="true"></div>
+  <nav id="sidebar" class="curs-sidebar" aria-label="Capítols del curs">
+    <div id="sidebar-nav"></div>
+  </nav>
+
+  <main class="curs-content">
+    <div class="chapter-content-inner">
+
+
+      <!-- ─────────────────────────────────────────
+           CAPÇALERA
+           ───────────────────────────────────────── -->
+      <header class="chapter-header">
+        <span class="chapter-badge">Capítol 4</span>
+        <h1>Decisions: <code>if</code>, <code>else if</code>, <code>else</code></h1>
+        <p class="chapter-lead">La majoria de programes informàtics prenen decisions: fan una cosa o una altra segons les dades que reben.</p>
+      </header>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 1 — Comparacions
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Comparacions</h2>
+
+        <p>Abans de decidir, un programa ha de comparar valors. Les comparacions retornen sempre <code>true</code> (cert) o <code>false</code> (fals):</p>
+
+        <div class="simulador"
+             data-code='console.log(5 > 3);
+console.log(5 < 3);
+console.log(10 === 10);
+console.log(10 !== 10);
+console.log(7 >= 7);
+console.log(7 <= 6);'
+             data-readonly="true"
+             data-height="320">
+        </div>
+
+        <p>Aquests són tots els operadors de comparació que faràs servir:</p>
+
+        <ul>
+          <li><code>===</code> — igual a (<strong>atenció</strong>: tres signes d'igual, no un ni dos)</li>
+          <li><code>!==</code> — diferent de</li>
+          <li><code>&lt;</code> — menor que</li>
+          <li><code>&gt;</code> — major que</li>
+          <li><code>&lt;=</code> — menor o igual</li>
+          <li><code>&gt;=</code> — major o igual</li>
+        </ul>
+
+        <p>Fixa't bé: <code>=</code> assigna un valor a una variable, i <code>===</code> compara dos valors. Confondre'ls és un dels errors més freqüents.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 2 — if simple
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>El <code>if</code> simple</h2>
+
+        <p>Amb <code>if</code> pots fer que un bloc de codi s'executi <em>només si</em> una condició és certa:</p>
+
+        <div class="simulador"
+             data-code='const nota = 8;
+if (nota >= 5) {
+  console.log("Aprovat!");
+}'
+             data-readonly="true"
+             data-height="260">
+        </div>
+
+        <p>Tres coses imprescindibles: la condició va sempre entre <strong>parèntesis</strong> <code>(...)</code>, el bloc de codi a executar va entre <strong>claus</strong> <code>{...}</code>, i el contingut de les claus va indentat (2 espais) per llegibilitat.</p>
+
+        <p>Prova de canviar <code>const nota = 8</code> per <code>const nota = 3</code> i torna a executar — el programa no imprimeix res, perquè la condició no s'ha complert.</p>
+
+        <div class="simulador"
+             data-code='const nota = 8;
+if (nota >= 5) {
+  console.log("Aprovat!");
+}'
+             data-height="260">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 3 — if / else
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2><code>if</code> / <code>else</code></h2>
+
+        <p>Si vols fer una cosa quan la condició és certa i una altra quan és falsa, afegeix <code>else</code>:</p>
+
+        <div class="simulador"
+             data-code='const nota = 3;
+if (nota >= 5) {
+  console.log("Aprovat!");
+} else {
+  console.log("Suspens.");
+}'
+             data-readonly="true"
+             data-height="300">
+        </div>
+
+        <p>El <code>else</code> no porta cap condició — s'executa quan el <code>if</code> no s'ha complert. Canvia la nota i comprova que el programa sempre imprimeix exactament una de les dues línies.</p>
+
+        <div class="simulador"
+             data-code='const nota = 3;
+if (nota >= 5) {
+  console.log("Aprovat!");
+} else {
+  console.log("Suspens.");
+}'
+             data-height="300">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 4 — if / else if / else
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2><code>if</code> / <code>else if</code> / <code>else</code></h2>
+
+        <p>Quan hi ha més de dues possibilitats, afegeixes tants <code>else if</code> (literalment: «si no, si…») com calgui. JavaScript comprova les condicions de dalt a baix i executa el primer bloc que es compleix:</p>
+
+        <div class="simulador"
+             data-code='const nota = 7;
+if (nota >= 9) {
+  console.log("Excel·lent");
+} else if (nota >= 7) {
+  console.log("Notable");
+} else if (nota >= 5) {
+  console.log("Aprovat");
+} else {
+  console.log("Suspens");
+}'
+             data-readonly="true"
+             data-height="360">
+        </div>
+
+        <p>L'ordre importa molt. Si posessis primer <code>nota >= 5</code>, un <code>9</code> imprimiria «Aprovat» perquè la primera condició ja seria certa. JavaScript s'atura en el primer <code>if</code>/<code>else if</code> que es compleix i <strong>no mira els de sota</strong>.</p>
+
+        <p>Prova valors com <code>4</code>, <code>5</code>, <code>7</code>, <code>9</code> i <code>10</code>:</p>
+
+        <div class="simulador"
+             data-code='const nota = 7;
+if (nota >= 9) {
+  console.log("Excel·lent");
+} else if (nota >= 7) {
+  console.log("Notable");
+} else if (nota >= 5) {
+  console.log("Aprovat");
+} else {
+  console.log("Suspens");
+}'
+             data-height="360">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 5 — && / || / !
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Condicions compostes: <code>&amp;&amp;</code>, <code>||</code>, <code>!</code></h2>
+
+        <p>Pots combinar dues comparacions en una sola condició:</p>
+
+        <div class="simulador"
+             data-code='const edat = 17;
+const teCarnet = false;
+
+if (edat >= 18 && teCarnet) {
+  console.log("Pots conduir.");
+} else {
+  console.log("No pots conduir.");
+}'
+             data-readonly="true"
+             data-height="320">
+        </div>
+
+        <p>L'operador <code>&amp;&amp;</code> (que es llegeix «i») exigeix que les <em>dues</em> condicions siguin certes. L'operador <code>||</code> («o») n'exigeix almenys una:</p>
+
+        <div class="simulador"
+             data-code='const dia = "dissabte";
+if (dia === "dissabte" || dia === "diumenge") {
+  console.log("Cap de setmana!");
+} else {
+  console.log("Entre dilluns i divendres.");
+}'
+             data-readonly="true"
+             data-height="280">
+        </div>
+
+        <p>L'operador <code>!</code> («no») inverteix una condició: <code>!true</code> és <code>false</code>, i viceversa. S'usa per fer el codi més llegible quan la condició negativa és la natural:</p>
+
+        <div class="simulador"
+             data-code='const plou = false;
+if (!plou) {
+  console.log("Sortim a passejar!");
+}'
+             data-readonly="true"
+             data-height="240">
+        </div>
+
+        <p>Una nota sobre el teclat: <code>&amp;</code> es troba sovint sobre el 6, i <code>|</code> (barra vertical) sobre l'1 o al costat de la <code>Z</code>, depèn del teclat. Fixa't que cal posar <strong>dos</strong> per a la condició (<code>&amp;&amp;</code>, <code>||</code>); amb un sol símbol té un altre significat (bit a bit) que no fem servir aquí.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 6 — Errors típics
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Errors típics</h2>
+
+        <p>Tres errors molt freqüents amb decisions:</p>
+
+        <p><strong>1. Oblidar els parèntesis al voltant de la condició</strong></p>
+
+        <div class="simulador"
+             data-code='const nota = 8;
+if nota >= 5 {
+  console.log("Aprovat!");
+}'
+             data-readonly="false"
+             data-height="260">
+        </div>
+
+        <p><strong>2. Usar <code>=</code> enlloc de <code>===</code> per comparar</strong></p>
+
+        <div class="simulador"
+             data-code='const nota = 8;
+if (nota = 5) {
+  console.log("Cinc!");
+}'
+             data-readonly="false"
+             data-height="260">
+        </div>
+
+        <p>El segon és especialment subtil: el codi <em>no peta</em>, però fa una cosa diferent de la que esperaves. <code>nota = 5</code> assigna el valor 5 a la variable, i com que 5 és un valor «cert» (no és 0), la condició sempre seria certa. Aquí ha donat error perquè la variable és <code>const</code> i no es pot reassignar, però en un altre cas el bug passaria desapercebut. <strong>Sempre <code>===</code> per comparar.</strong></p>
+
+        <p><strong>3. Oblidar les claus <code>{ ... }</code></strong></p>
+
+        <p>Tècnicament, JavaScript permet escriure un <code>if</code> sense claus si només hi ha una instrucció. Però és una font enorme de bugs. Mira aquest exemple sospitós:</p>
+
+        <div class="simulador"
+             data-code='const nota = 3;
+if (nota >= 5)
+  console.log("Aprovat");
+  console.log("Felicitats!");'
+             data-readonly="false"
+             data-height="280">
+        </div>
+
+        <p>Sembla que les dues línies depenen del <code>if</code>, però en realitat <strong>només la primera</strong> hi depèn. La segona s'executa sempre, encara que la nota sigui un 3! Per evitar aquest error, <strong>posa sempre claus</strong>, encara que el bloc tingui una sola línia.</p>
+
+        <p>Una última cosa: pot ser que vegis codi amb <code>==</code> i <code>!=</code> (dos signes enlloc de tres). Existeixen, però fan una cosa estranya: comparen amb conversió automàtica de tipus. Per exemple, <code>0 == "0"</code> dona <code>true</code> (perquè JavaScript converteix l'string a nombre per comparar). Això genera bugs subtils. <strong>Fes servir sempre <code>===</code> i <code>!==</code>.</strong></p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           EXERCICI
+           ───────────────────────────────────────── -->
+      <section class="chapter-section chapter-exercise">
+        <h2>Exercici</h2>
+
+        <div class="exercise-enunciat">
+          Escriu un programa que llegeixi una nota entera (de 0 a 10) i imprimeixi la qualificació corresponent, seguint aquest criteri: de 0 a 4, <strong>Suspens</strong>; de 5 a 6, <strong>Aprovat</strong>; de 7 a 8, <strong>Notable</strong>; de 9 a 10, <strong>Excel·lent</strong>.
+        </div>
+
+        <p>El programa ha de funcionar per qualsevol nota vàlida. La sortida ha de ser <strong>exactament</strong> una d'aquestes quatre paraules (amb accent on calgui).</p>
+
+        <div class="simulador"
+             data-code='const nota = Number(prompt("Escriu la nota (0-10):"));
+// Escriu les condicions aquí:
+'
+             data-tests='[
+               {"stdin": "3",  "expected": "Suspens"},
+               {"stdin": "5",  "expected": "Aprovat"},
+               {"stdin": "8",  "expected": "Notable"},
+               {"stdin": "10", "expected": "Excel·lent"}
+             ]'
+             data-goal-id="cap-4-ex"
+             data-height="360">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           RESUM
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Resum</h2>
+        <ul>
+          <li><code>if (condició) { ... }</code> executa un bloc si la condició és certa.</li>
+          <li><code>else { ... }</code> s'executa quan cap <code>if</code>/<code>else if</code> anterior s'ha complert.</li>
+          <li><code>else if (condició) { ... }</code> permet encadenar més de dues branques; JavaScript s'atura en la primera certa.</li>
+          <li>Les comparacions (<code>===</code>, <code>!==</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>) retornen <code>true</code> o <code>false</code>.</li>
+          <li><code>&amp;&amp;</code> / <code>||</code> / <code>!</code> combinen o inverteixen condicions.</li>
+          <li>Sempre <strong>parèntesis</strong> al voltant de la condició i <strong>claus</strong> al voltant del bloc.</li>
+          <li>Sempre <code>===</code> per comparar, mai <code>=</code> ni <code>==</code>.</li>
+        </ul>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           NAVEGACIÓ
+           ───────────────────────────────────────── -->
+      <nav class="chapter-nav" aria-label="Navegació entre capítols">
+        <a href="capitol-3.html" class="btn-nav btn-nav--prev">← Capítol anterior</a>
+        <a href="capitol-5.html" class="btn-nav btn-nav--next">Capítol següent →</a>
+      </nav>
+
+
+    </div>
+  </main>
+</div>
+
+<script src="capitols.js"></script>
+<script>
+  injectCursLogo();
+  renderSidebar(4);
+  renderSimuladors();
+  initSidebarToggle();
+</script>
+
+<script src="../footer.js"></script>
+</body>
+</html>

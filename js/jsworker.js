@@ -70,27 +70,30 @@ let _stdinLines = [];
 let _stdinIdx   = 0;
 
 self.prompt = function(msg) {
-  // Imprimeix el missatge del prompt() com a stdout perquè l'alumne vegi què demanava
+  // Imprimeix el missatge del prompt() com a sortida visual (system)
+  // perquè l'alumne vegi què demanava. Marcat com a `system: true`
+  // perquè el sistema de validació l'ignori (només es valida el que l'alumne
+  // imprimeix explícitament amb console.log).
   if (msg !== undefined && msg !== null && msg !== '') {
-    _send('stdout', { text: _fmt(msg) });
+    _send('stdout', { text: _fmt(msg), system: true });
   }
   if (_stdinIdx >= _stdinLines.length) return null;
   const line = _stdinLines[_stdinIdx++];
-  // Eco visual perquè l'alumne vegi què s'ha llegit
-  _send('stdout', { text: '> ' + line });
+  // Eco visual del que s'ha llegit, també marcat com a system
+  _send('stdout', { text: '> ' + line, system: true });
   return line;
 };
 
-// confirm() — sempre retorna true al primer ús, false després
-// (decisió simple per al MVP; com prompt(), llegeix una línia: 'true'/'false' o 's'/'n')
+// confirm() — llegeix una línia: 'true'/'false' o 's'/'n'.
+// Igual que prompt(), els missatges visuals són system (no validables).
 self.confirm = function(msg) {
   if (msg !== undefined && msg !== null && msg !== '') {
-    _send('stdout', { text: _fmt(msg) });
+    _send('stdout', { text: _fmt(msg), system: true });
   }
   if (_stdinIdx >= _stdinLines.length) return false;
   const line = _stdinLines[_stdinIdx++].trim().toLowerCase();
   const result = (line === 'true' || line === 's' || line === 'sí' || line === 'si' || line === 'yes' || line === 'y');
-  _send('stdout', { text: '> ' + (result ? 'sí' : 'no') });
+  _send('stdout', { text: '> ' + (result ? 'sí' : 'no'), system: true });
   return result;
 };
 
