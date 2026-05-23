@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítol 7 — Funcions | JSCat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="curs.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button id="sidebar-toggle" aria-label="Mostra/amaga els capítols" aria-expanded="false">☰</button>
+  <div class="logo">
+    <span class="logo-icon"></span>
+    <span>JSCat</span>
+  </div>
+  <nav class="topbar-nav">
+    <a href="capitol-1.html" class="topbar-nav-link active">Capítols</a>
+    <a href="repte-1.html" class="topbar-nav-link">Reptes</a>
+    <a href="../index.html" class="topbar-nav-link">Simulador</a>
+  </nav>
+  <div class="topbar-actions"></div>
+</header>
+
+<div class="curs-layout">
+  <div id="sidebar-overlay" aria-hidden="true"></div>
+  <nav id="sidebar" class="curs-sidebar" aria-label="Capítols del curs">
+    <div id="sidebar-nav"></div>
+  </nav>
+
+  <main class="curs-content">
+    <div class="chapter-content-inner">
+
+
+      <!-- ─────────────────────────────────────────
+           CAPÇALERA
+           ───────────────────────────────────────── -->
+      <header class="chapter-header">
+        <span class="chapter-badge">Capítol 7</span>
+        <h1>Funcions</h1>
+        <p class="chapter-lead">Les funcions són trossos de codi amb nom: les escrius una vegada i les fas servir tantes vegades com vulguis. Són una de les eines més poderoses de qualsevol llenguatge de programació.</p>
+      </header>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 1 — Per què funcions
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Per què fer servir funcions?</h2>
+
+        <p>Imagina que has de saludar diverses persones en un programa. Sense funcions, hauries de repetir les mateixes línies una vegada per cada persona:</p>
+
+        <div class="simulador"
+             data-code='// Sense funció — repetim la mateixa lògica tres vegades
+console.log("Hola, Anna!");
+console.log("Benvinguda al curs.");
+console.log("---");
+console.log("Hola, Bernat!");
+console.log("Benvingut al curs.");
+console.log("---");
+console.log("Hola, Carla!");
+console.log("Benvinguda al curs.");
+console.log("---");'
+             data-readonly="true"
+             data-height="320">
+        </div>
+
+        <p>Repetir codi és un problema: si vols canviar el missatge, has de modificar-lo en tres llocs. Les funcions solucionen això seguint el principi <strong>DRY</strong> (<em>Don't Repeat Yourself</em>, no et repeteixis): escrius la lògica una vegada i la crides tantes vegades com calgui.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 2 — function sense paràmetres
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Definir una funció: <code>function</code></h2>
+
+        <p>Una funció es defineix amb la paraula clau <strong><code>function</code></strong>, seguida del nom de la funció, uns parèntesis i un bloc entre claus. El codi de dins és el que s'executarà cada vegada que la cridis:</p>
+
+        <div class="simulador"
+             data-code='function saluda() {
+  console.log("Hola!");
+  console.log("Benvingut al curs.");
+  console.log("---");
+}
+
+// La funció no s&apos;executa fins que la "cridem":
+saluda();
+saluda();
+saluda();'
+             data-readonly="true"
+             data-height="320">
+        </div>
+
+        <p>Per <strong>cridar</strong> una funció, escrius el seu nom seguit dels parèntesis. Sense els parèntesis, la funció no s'executa.</p>
+
+        <p>Els noms de funcions en JavaScript segueixen la mateixa convenció que les variables: <strong>camelCase</strong> (primera lletra en minúscula, la primera de cada paraula següent en majúscula): <code>saluda</code>, <code>liniaSeparadora</code>, <code>calculaArea</code>.</p>
+
+        <p>Prova a modificar el missatge dins la funció i observa com canvia en totes tres crides alhora:</p>
+
+        <div class="simulador"
+             data-code='function liniaSeparadora() {
+  console.log("=".repeat(20));
+}
+
+liniaSeparadora();
+console.log("Resultat: 42");
+liniaSeparadora();
+console.log("Resultat: 99");
+liniaSeparadora();'
+             data-height="320">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 3 — function amb paràmetres
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Paràmetres: fer funcions flexibles</h2>
+
+        <p>Els <strong>paràmetres</strong> són variables especials que reben valors quan crides la funció. Es declaren dins dels parèntesis. Gràcies a ells, la mateixa funció pot treballar amb dades diferents cada vegada:</p>
+
+        <div class="simulador"
+             data-code='function saluda(nom) {
+  console.log(`Hola, ${nom}!`);
+  console.log("Benvingut al curs.");
+  console.log("---");
+}
+
+saluda("Anna");
+saluda("Bernat");
+saluda("Carla");'
+             data-readonly="true"
+             data-height="320">
+        </div>
+
+        <p>Quan crides <code>saluda("Anna")</code>, el valor <code>"Anna"</code> s'assigna al paràmetre <code>nom</code> dins de la funció. A la pròxima crida, <code>nom</code> valdrà <code>"Bernat"</code>, i així successivament. Cada crida és independent.</p>
+
+        <p>Una funció pot tenir tants paràmetres com calgui, separats per comes. L'ordre importa: el primer valor que passes va al primer paràmetre, el segon al segon, etc.:</p>
+
+        <div class="simulador"
+             data-code='function comiat(nom, idioma) {
+  if (idioma === "ca") {
+    console.log(`Fins aviat, ${nom}!`);
+  } else if (idioma === "es") {
+    console.log(`¡Hasta pronto, ${nom}!`);
+  } else {
+    console.log(`Bye, ${nom}!`);
+  }
+}
+
+comiat("Anna", "ca");
+comiat("Bernat", "es");
+comiat("Carla", "en");'
+             data-height="380">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 4 — return vs console.log
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>La diferència crucial: <code>return</code> vs <code>console.log</code></h2>
+
+        <p>Aquesta és la distinció més important de tot el capítol. Una funció pot <strong>imprimir</strong> un resultat o <strong>retornar-lo</strong>. Sembla el mateix, però no ho és.</p>
+
+        <p>Una funció que fa <code>console.log()</code> mostra el resultat a la consola, però el valor <strong>desapareix</strong>: no el pots guardar ni fer-lo servir en cap càlcul posterior. Mira aquest exemple:</p>
+
+        <div class="simulador"
+             data-code='function doblaImprimit(n) {
+  console.log(n * 2);   // mostra el resultat, però no el retorna
+}
+
+const resultat = doblaImprimit(5);
+console.log("Resultat guardat:", resultat);'
+             data-readonly="true"
+             data-height="280">
+        </div>
+
+        <p>La variable <code>resultat</code> val <code>undefined</code>, no <code>10</code> com t'esperaries! El <code>console.log</code> dins la funció ha imprès el 10, però no l'ha retornat.</p>
+
+        <p>Una funció amb <strong><code>return</code></strong> envia el valor de tornada al lloc on s'ha cridat. Llavors pots guardar-lo a una variable, fer-lo servir en una expressió o passar-lo a una altra funció:</p>
+
+        <div class="simulador"
+             data-code='function dobla(n) {
+  return n * 2;   // retorna el resultat sense imprimir-lo
+}
+
+const resultat = dobla(5);
+console.log(resultat + 3);     // 13
+console.log(dobla(7));         // 14
+console.log(dobla(dobla(4)));  // 16 (dobla de dobla)'
+             data-readonly="true"
+             data-height="300">
+        </div>
+
+        <p>Una altra cosa important: <code>return</code> <strong>finalitza la funció immediatament</strong>. Qualsevol codi després d'un <code>return</code> que s'executa no es farà mai. Això pot ser molt útil per sortir aviat d'una funció en certs casos:</p>
+
+        <div class="simulador"
+             data-code='function valorAbsolut(n) {
+  if (n >= 0) {
+    return n;     // si n és positiu, acabem aquí
+  }
+  return -n;      // si no, retornem el negat
+}
+
+console.log(valorAbsolut(7));    // 7
+console.log(valorAbsolut(-3));   // 3
+console.log(valorAbsolut(0));    // 0'
+             data-height="320">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 5 — Diversos paràmetres i composició
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Composició: funcions dins de funcions</h2>
+
+        <p>Les funcions es poden cridar des de dins d'altres funcions. El programa entra a la funció interior, n'obté el resultat, i el fa servir a l'exterior. Això et permet construir funcions complexes a partir de funcions senzilles:</p>
+
+        <div class="simulador"
+             data-code='function quadrat(n) {
+  return n * n;
+}
+
+function sumaQuadrats(a, b) {
+  return quadrat(a) + quadrat(b);
+}
+
+console.log(sumaQuadrats(3, 4));    // 9 + 16 = 25
+console.log(sumaQuadrats(5, 12));   // 25 + 144 = 169'
+             data-height="320">
+        </div>
+
+        <p>Aquest patró és tan útil que la majoria del codi del món està fet així: funcions petites que es combinen per fer feines més grans.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 6 — Valors per defecte
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Valors per defecte</h2>
+
+        <p>Pots donar a un paràmetre un <strong>valor per defecte</strong>, que s'utilitza si qui crida la funció no proporciona aquest argument:</p>
+
+        <div class="simulador"
+             data-code='function saluda(nom = "amic") {
+  console.log(`Hola, ${nom}!`);
+}
+
+saluda("Anna");      // amb argument: usa "Anna"
+saluda();            // sense argument: usa "amic"'
+             data-readonly="true"
+             data-height="260">
+        </div>
+
+        <p>És útil per a paràmetres opcionals. Si tots els paràmetres tenen valor per defecte, la funció es pot cridar sense cap argument.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 7 — Variables locals
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Variables locals: el que passa dins, queda dins</h2>
+
+        <p>Les variables que declares <strong>dins</strong> d'una funció (amb <code>let</code> o <code>const</code>) s'anomenen <strong>variables locals</strong>. Existeixen només mentre la funció s'executa i desapareixen quan acaba. No es poden veure des de fora:</p>
+
+        <div class="simulador"
+             data-code='function calculaArea(base, altura) {
+  const area = base * altura;   // variable local
+  return area;
+}
+
+console.log(calculaArea(5, 3));   // 15
+console.log(area);                 // ERROR: area no existeix aquí'
+             data-readonly="true"
+             data-height="280">
+        </div>
+
+        <p>L'última línia dona <code>ReferenceError</code>: la variable <code>area</code> només existia dins la funció.</p>
+
+        <p>Una cosa important: els paràmetres no necessiten tenir el mateix nom que la variable que passes a la crida. Cada funció té el seu propi món:</p>
+
+        <div class="simulador"
+             data-code='function duplica(n) {
+  const resultat = n * 2;
+  return resultat;
+}
+
+const x = 7;
+const y = duplica(x);
+console.log(y);    // 14
+console.log(x);    // 7 — x no ha canviat!'
+             data-height="280">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 8 — Errors típics
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Errors típics</h2>
+
+        <p><strong>1. Usar <code>console.log</code> enlloc de <code>return</code></strong> — la funció mostra el valor però no el retorna, així que guardar el resultat en una variable et dona <code>undefined</code>:</p>
+
+        <div class="simulador"
+             data-code='function suma(a, b) {
+  console.log(a + b);   // mostra 7
+}
+
+const total = suma(3, 4);
+console.log(total * 2);   // NaN! perquè total és undefined'
+             data-readonly="true"
+             data-height="260">
+        </div>
+
+        <p>Sortida: 7, i després <code>NaN</code> (<em>Not a Number</em>). Això passa perquè <code>undefined * 2</code> no és cap nombre vàlid. Si la funció hagués fet <code>return a + b</code>, tot funcionaria.</p>
+
+        <p><strong>2. Cridar la funció sense parèntesis</strong> — sense <code>()</code> no estàs cridant la funció, sinó referint-t'hi com a objecte. El resultat és estrany:</p>
+
+        <div class="simulador"
+             data-code='function salutacio() {
+  return "Hola!";
+}
+
+const resultat = salutacio;    // sense parèntesis: no la crida!
+console.log(resultat);'
+             data-readonly="true"
+             data-height="260">
+        </div>
+
+        <p>S'imprimeix el codi de la funció sencer, no <code>"Hola!"</code>. Si volem el valor que retorna la funció, hem d'escriure <code>salutacio()</code> amb parèntesis.</p>
+
+        <p><strong>3. Passar menys arguments dels esperats</strong> — JavaScript no avisa, simplement assigna <code>undefined</code> al paràmetre que falta:</p>
+
+        <div class="simulador"
+             data-code='function presenta(nom, edat) {
+  console.log(`${nom} té ${edat} anys.`);
+}
+
+presenta("Anna");   // Sense edat!'
+             data-readonly="true"
+             data-height="240">
+        </div>
+
+        <p>El resultat és <code>"Anna té undefined anys."</code>. JavaScript no peta; només mostra un text estrany. Si vols un valor per defecte sensat quan l'argument no es passa, usa la sintaxi del valor per defecte (secció 6).</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           EXERCICI
+           ───────────────────────────────────────── -->
+      <section class="chapter-section chapter-exercise">
+        <h2>Exercici</h2>
+
+        <div class="exercise-enunciat">
+          Escriu una funció <code>esPrimer(n)</code> que retorni <code>true</code> si <code>n</code> és un nombre primer, i <code>false</code> en cas contrari.
+        </div>
+
+        <p>Un nombre és primer si és més gran que 1 i no és divisible per cap nombre entre 2 i <code>n - 1</code>.</p>
+
+        <p>Per exemple:</p>
+        <ul>
+          <li><code>esPrimer(2)</code> → <code>true</code></li>
+          <li><code>esPrimer(7)</code> → <code>true</code></li>
+          <li><code>esPrimer(10)</code> → <code>false</code></li>
+          <li><code>esPrimer(1)</code> → <code>false</code></li>
+        </ul>
+
+        <p>Pista: fes servir un bucle <code>for</code> des de <code>2</code> fins a <code>n - 1</code> i l'operador <code>%</code> per comprovar si <code>n</code> és divisible per algun nombre. Si trobes un divisor, retorna <code>false</code> immediatament. Si el bucle acaba sense trobar-ne cap, retorna <code>true</code>.</p>
+
+        <div class="simulador"
+             data-code='function esPrimer(n) {
+  // Escriu el codi aquí
+
+}'
+             data-testcode='console.log(esPrimer(2));
+console.log(esPrimer(7));
+console.log(esPrimer(10));
+console.log(esPrimer(1));'
+             data-expected='true
+true
+false
+false'
+             data-goal-id="cap-7-ex"
+             data-height="360">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           RESUM
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Resum</h2>
+        <ul>
+          <li>Una funció es defineix amb <code>function nom() { ... }</code> i es crida escrivint <code>nom()</code>. El codi de dins s'executa cada vegada que la crides.</li>
+          <li>Els <strong>paràmetres</strong> es declaren dins dels parèntesis i permeten passar dades a la funció a cada crida.</li>
+          <li><code>return valor</code> envia el resultat de tornada i acaba la funció. Sense <code>return</code>, la funció retorna <code>undefined</code>.</li>
+          <li>La diferència entre <code>console.log</code> i <code>return</code> és crucial: <code>console.log</code> mostra; <code>return</code> torna el valor al codi que ha cridat la funció.</li>
+          <li>Pots donar <strong>valors per defecte</strong> als paràmetres: <code>function f(x = 0)</code>.</li>
+          <li>Les variables declarades dins d'una funció són <strong>locals</strong>: només existeixen mentre la funció s'executa.</li>
+          <li>JavaScript no peta si crides una funció amb menys arguments dels esperats: els paràmetres no proporcionats valen <code>undefined</code>.</li>
+        </ul>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           NAVEGACIÓ
+           ───────────────────────────────────────── -->
+      <nav class="chapter-nav" aria-label="Navegació entre capítols">
+        <a href="capitol-6.html" class="btn-nav btn-nav--prev">← Capítol anterior</a>
+        <a href="capitol-8.html" class="btn-nav btn-nav--next">Capítol següent →</a>
+      </nav>
+
+
+    </div>
+  </main>
+</div>
+
+<script src="capitols.js"></script>
+<script>
+  injectCursLogo();
+  renderSidebar(7);
+  renderSimuladors();
+  initSidebarToggle();
+</script>
+
+<script src="../footer.js"></script>
+</body>
+</html>

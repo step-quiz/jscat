@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítol 8 — Objectes | JSCat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="curs.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button id="sidebar-toggle" aria-label="Mostra/amaga els capítols" aria-expanded="false">☰</button>
+  <div class="logo">
+    <span class="logo-icon"></span>
+    <span>JSCat</span>
+  </div>
+  <nav class="topbar-nav">
+    <a href="capitol-1.html" class="topbar-nav-link active">Capítols</a>
+    <a href="repte-1.html" class="topbar-nav-link">Reptes</a>
+    <a href="../index.html" class="topbar-nav-link">Simulador</a>
+  </nav>
+  <div class="topbar-actions"></div>
+</header>
+
+<div class="curs-layout">
+  <div id="sidebar-overlay" aria-hidden="true"></div>
+  <nav id="sidebar" class="curs-sidebar" aria-label="Capítols del curs">
+    <div id="sidebar-nav"></div>
+  </nav>
+
+  <main class="curs-content">
+    <div class="chapter-content-inner">
+
+
+      <!-- ─────────────────────────────────────────
+           CAPÇALERA
+           ───────────────────────────────────────── -->
+      <header class="chapter-header">
+        <span class="chapter-badge">Capítol 8</span>
+        <h1>Objectes</h1>
+        <p class="chapter-lead">Els arrays guarden valors ordenats per posició. Els <strong>objectes</strong> guarden valors per <strong>nom</strong>: en lloc d'accedir-hi per índex (<code>0, 1, 2…</code>), hi accedeixes amb una <em>etiqueta</em> (<code>nom</code>, <code>edat</code>…). Són ideals per representar coses del món real amb diverses característiques.</p>
+      </header>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 1 — Crear un objecte
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Crear un objecte</h2>
+
+        <p>Un objecte s'escriu amb <strong>claus</strong> <code>{ }</code>. Dins, cada entrada és un parell <code>clau: valor</code>, separat per comes:</p>
+
+        <div class="simulador"
+             data-code='const persona = {
+  nom: "Ada",
+  edat: 16,
+  ciutat: "Barcelona"
+};
+console.log(persona);'
+             data-readonly="true"
+             data-height="280">
+        </div>
+
+        <p>Algunes coses a notar:</p>
+        <ul>
+          <li>Les claus (<code>nom</code>, <code>edat</code>…) <strong>no necessiten cometes</strong> quan són paraules simples.</li>
+          <li>Els valors poden ser de qualsevol tipus: strings, nombres, booleans, arrays, fins i tot altres objectes.</li>
+          <li>La coma entre entrades és obligatòria. La de després de l'última és opcional (a JS no és error).</li>
+        </ul>
+
+        <p>Un objecte buit s'escriu <code>{}</code>:</p>
+
+        <div class="simulador"
+             data-code='const buit = {};
+console.log(buit);'
+             data-readonly="true"
+             data-height="200">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 2 — Accedir a les propietats
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Accedir a les propietats</h2>
+
+        <p>Hi ha dues maneres d'accedir a una propietat: amb un <strong>punt</strong> o amb <strong>claudàtors</strong>. Les dues fan exactament el mateix:</p>
+
+        <div class="simulador"
+             data-code='const persona = { nom: "Ada", edat: 16, ciutat: "Barcelona" };
+
+// Amb notació de punt:
+console.log(persona.nom);
+console.log(persona.edat);
+
+// Amb notació de claudàtors:
+console.log(persona["nom"]);
+console.log(persona["edat"]);'
+             data-readonly="true"
+             data-height="320">
+        </div>
+
+        <p>El <strong>punt</strong> és més curt i més llegible — és la forma que faràs servir el 99% de les vegades. Els <strong>claudàtors</strong> són útils quan la clau ve d'una variable, perquè el punt no ho pot fer:</p>
+
+        <div class="simulador"
+             data-code='const persona = { nom: "Ada", edat: 16, ciutat: "Barcelona" };
+const camp = "edat";
+
+console.log(persona[camp]);   // 16, accedeix a la propietat "edat"
+console.log(persona.camp);    // undefined, busca una propietat literal "camp"'
+             data-readonly="true"
+             data-height="280">
+        </div>
+
+        <p>Si demanes una propietat que no existeix, JavaScript no peta: retorna <code>undefined</code> (igual que amb els arrays):</p>
+
+        <div class="simulador"
+             data-code='const persona = { nom: "Ada", edat: 16 };
+console.log(persona.telefon);   // No existeix!'
+             data-readonly="true"
+             data-height="220">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 3 — Modificar, afegir, eliminar
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Modificar, afegir i eliminar propietats</h2>
+
+        <p>Per <strong>modificar</strong> una propietat existent, simplement assigna-li un valor nou:</p>
+
+        <div class="simulador"
+             data-code='const persona = { nom: "Ada", edat: 16 };
+persona.edat = 17;
+console.log(persona);'
+             data-readonly="true"
+             data-height="240">
+        </div>
+
+        <p>Per <strong>afegir</strong> una propietat nova, fas exactament el mateix — JavaScript la crea automàticament:</p>
+
+        <div class="simulador"
+             data-code='const persona = { nom: "Ada", edat: 16 };
+persona.ciutat = "Barcelona";
+persona.telefon = "555-1234";
+console.log(persona);'
+             data-readonly="true"
+             data-height="280">
+        </div>
+
+        <p>Per <strong>eliminar</strong> una propietat, fas servir <code>delete</code>:</p>
+
+        <div class="simulador"
+             data-code='const persona = { nom: "Ada", edat: 16, telefon: "555-1234" };
+delete persona.telefon;
+console.log(persona);'
+             data-readonly="true"
+             data-height="240">
+        </div>
+
+        <p>Tornem al patró de <code>const</code> del capítol 6: igual que amb els arrays, <code>const</code> protegeix la variable però <strong>no</strong> el contingut. Pots modificar propietats, afegir-les i eliminar-les. El que <strong>no</strong> pots fer és reassignar tot l'objecte (<code>persona = { ... }</code>).</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 4 — Comprovar si una propietat existeix
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Comprovar si una propietat existeix</h2>
+
+        <p>Com que demanar una propietat inexistent no peta (retorna <code>undefined</code>), de vegades has de comprovar explícitament si hi és abans d'usar-la. Hi ha dues maneres:</p>
+
+        <div class="simulador"
+             data-code='const persona = { nom: "Ada", edat: 16 };
+
+// 1) Comparar amb undefined
+if (persona.telefon === undefined) {
+  console.log("No té telèfon");
+}
+
+// 2) Amb l&apos;operador in (més neta)
+if (!("telefon" in persona)) {
+  console.log("No té telèfon (versió in)");
+}'
+             data-readonly="true"
+             data-height="320">
+        </div>
+
+        <p>L'operador <code>in</code> retorna <code>true</code> si la clau existeix a l'objecte, encara que el seu valor sigui <code>undefined</code> o <code>null</code>. Per a la majoria de casos, qualsevol de les dues opcions funciona bé.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 5 — Object.keys, values, entries
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Recórrer un objecte</h2>
+
+        <p>Un objecte no té <code>.length</code> com els arrays. Si vols saber quantes propietats té o recórrer-les, fas servir <strong><code>Object.keys()</code></strong>, <strong><code>Object.values()</code></strong> i <strong><code>Object.entries()</code></strong>:</p>
+
+        <div class="simulador"
+             data-code='const persona = { nom: "Ada", edat: 16, ciutat: "Barcelona" };
+
+console.log(Object.keys(persona));     // les claus
+console.log(Object.values(persona));   // els valors
+console.log(Object.keys(persona).length);  // nombre de propietats'
+             data-readonly="true"
+             data-height="280">
+        </div>
+
+        <p>Per <strong>recórrer</strong> totes les propietats amb un bucle, la manera més habitual és <code>for...in</code>, que itera per les claus:</p>
+
+        <div class="simulador"
+             data-code='const persona = { nom: "Ada", edat: 16, ciutat: "Barcelona" };
+
+for (const clau in persona) {
+  console.log(`${clau}: ${persona[clau]}`);
+}'
+             data-readonly="true"
+             data-height="260">
+        </div>
+
+        <p>Llegeix-ho: «per a cada <code>clau</code> dins de <code>persona</code>, imprimeix la clau i el seu valor». Dins del bucle, <code>persona[clau]</code> dona el valor associat — aquí cal usar <strong>claudàtors</strong> perquè <code>clau</code> és una variable, no una clau literal.</p>
+
+        <p>Atenció: <code>for...in</code> (per a objectes) és diferent de <code>for...of</code> (per a arrays). Confondre'ls és un error comú.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 6 — Objectes anidats
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Objectes amb altres objectes a dins</h2>
+
+        <p>Un valor dins d'un objecte pot ser un altre objecte, un array, o el que vulguis. Així pots representar coses del món real amb estructures complexes:</p>
+
+        <div class="simulador"
+             data-code='const alumne = {
+  nom: "Ada",
+  edat: 16,
+  adreça: {
+    carrer: "Av. Diagonal",
+    numero: 245,
+    ciutat: "Barcelona"
+  },
+  assignatures: ["Mates", "Història", "Programació"]
+};
+
+console.log(alumne.nom);
+console.log(alumne.adreça.ciutat);
+console.log(alumne.assignatures[0]);
+console.log(alumne.assignatures.length);'
+             data-readonly="true"
+             data-height="380">
+        </div>
+
+        <p>Pots encadenar punts i claudàtors tantes vegades com calgui: <code>alumne.adreça.ciutat</code> primer agafa l'objecte <code>adreça</code> i després n'extreu la propietat <code>ciutat</code>. Igualment, <code>alumne.assignatures[0]</code> primer agafa l'array i després el seu primer element.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 7 — Array d'objectes
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Arrays d'objectes</h2>
+
+        <p>El patró més habitual és tenir un array d'objectes — una llista d'elements, on cada element té diverses propietats. Per exemple, una llista de productes d'una botiga:</p>
+
+        <div class="simulador"
+             data-code='const productes = [
+  { nom: "Llapis",    preu: 0.5,  estoc: 100 },
+  { nom: "Llibreta",  preu: 3.5,  estoc: 25  },
+  { nom: "Motxilla",  preu: 22.0, estoc: 8   }
+];
+
+// Recórrer i mostrar
+for (const p of productes) {
+  console.log(`${p.nom}: ${p.preu}€ (${p.estoc} en estoc)`);
+}'
+             data-readonly="true"
+             data-height="340">
+        </div>
+
+        <p>Combinant arrays i objectes pots representar qualsevol estructura de dades complexa. Aquest és l'estil amb què es treballa quan reps dades d'una API o d'una base de dades a internet.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 8 — Errors típics
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Errors típics</h2>
+
+        <p><strong>1. Buscar <code>.length</code> en un objecte</strong> — no existeix:</p>
+
+        <div class="simulador"
+             data-code='const persona = { nom: "Ada", edat: 16 };
+console.log(persona.length);'
+             data-readonly="true"
+             data-height="220">
+        </div>
+
+        <p>Surt <code>undefined</code>, no <code>2</code>. La manera correcta és <code>Object.keys(persona).length</code>.</p>
+
+        <p><strong>2. Posar coma després del darrer element en algun cas problemàtic</strong> — JavaScript modern ho accepta dins objectes i arrays, però en context d'expressions pot crear sorpreses. Per ser segur, no la posis si no l'has vista al codi del professor.</p>
+
+        <p><strong>3. Confondre <code>for...in</code> i <code>for...of</code></strong>:</p>
+
+        <div class="simulador"
+             data-code='const colors = ["vermell", "verd", "blau"];
+
+// Amb arrays, vols els valors → for...of
+for (const c of colors) {
+  console.log(c);
+}
+
+// Si fas servir for...in amb arrays, t&apos;arriba l&apos;índex (com string!)
+for (const i in colors) {
+  console.log(i);   // "0", "1", "2" — strings, no nombres!
+}'
+             data-readonly="true"
+             data-height="340">
+        </div>
+
+        <p>Regla pràctica: amb <strong>arrays</strong>, fes <code>for...of</code>. Amb <strong>objectes</strong>, fes <code>for...in</code>.</p>
+
+        <p><strong>4. Accedir a una propietat d'un objecte que no existeix dins d'un altre</strong> — encadenes els punts i peta:</p>
+
+        <div class="simulador"
+             data-code='const persona = { nom: "Ada" };
+console.log(persona.adreça.ciutat);   // ERROR'
+             data-readonly="true"
+             data-height="220">
+        </div>
+
+        <p>Surt <code>TypeError: Cannot read properties of undefined</code>. <code>persona.adreça</code> és <code>undefined</code>, i no pots fer <code>.ciutat</code> sobre <code>undefined</code>. Si no estàs segur que la propietat existeixi, comprova-la abans.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           EXERCICI
+           ───────────────────────────────────────── -->
+      <section class="chapter-section chapter-exercise">
+        <h2>Exercici</h2>
+
+        <div class="exercise-enunciat">
+          Tens un array d'objectes que representa alumnes amb el seu nom i la seva nota. Escriu una funció <code>millorAlumne(alumnes)</code> que retorni l'objecte de l'alumne amb la nota més alta.
+        </div>
+
+        <p>L'array tindrà sempre almenys un alumne. Per exemple:</p>
+        <pre class="code-example">[{nom: "Anna", nota: 7}, {nom: "Bernat", nota: 9}, {nom: "Carla", nota: 8}]</pre>
+        <p>Hauria de retornar l'objecte <code>{nom: "Bernat", nota: 9}</code>.</p>
+
+        <p>Pista: recorda el patró del màxim del capítol 6. Has de mantenir una variable que apunti al millor alumne trobat fins ara, i actualitzar-la quan en trobis un de millor.</p>
+
+        <div class="simulador"
+             data-code='function millorAlumne(alumnes) {
+  // Escriu el codi aquí
+
+}'
+             data-testcode='const grup1 = [
+  { nom: "Anna", nota: 7 },
+  { nom: "Bernat", nota: 9 },
+  { nom: "Carla", nota: 8 }
+];
+const grup2 = [{ nom: "Pol", nota: 5 }];
+const grup3 = [
+  { nom: "Marc", nota: 10 },
+  { nom: "Joana", nota: 4 },
+  { nom: "Eva", nota: 6 }
+];
+
+const m1 = millorAlumne(grup1);
+console.log(`${m1.nom}: ${m1.nota}`);
+const m2 = millorAlumne(grup2);
+console.log(`${m2.nom}: ${m2.nota}`);
+const m3 = millorAlumne(grup3);
+console.log(`${m3.nom}: ${m3.nota}`);'
+             data-expected='Bernat: 9
+Pol: 5
+Marc: 10'
+             data-goal-id="cap-8-ex"
+             data-height="420">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           RESUM
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Resum</h2>
+        <ul>
+          <li>Un <strong>objecte</strong> agrupa valors amb noms: <code>const p = { nom: "Ada", edat: 16 };</code>.</li>
+          <li>Accedeixes a propietats amb punt (<code>p.nom</code>) o claudàtors (<code>p["nom"]</code>). Els claudàtors són necessaris si la clau és dinàmica.</li>
+          <li>Per <strong>afegir</strong>, <strong>modificar</strong> o <strong>eliminar</strong> propietats: <code>p.x = y</code>, <code>delete p.x</code>.</li>
+          <li>Una propietat inexistent retorna <code>undefined</code> (no dona error).</li>
+          <li>Un objecte <strong>no té <code>.length</code></strong>: per saber quantes propietats té, fas <code>Object.keys(obj).length</code>.</li>
+          <li>Recorres un objecte amb <code>for (const clau in obj)</code>; un array, amb <code>for (const x of arr)</code>.</li>
+          <li>Pots niar objectes dins d'objectes i tenir arrays d'objectes per modelar estructures complexes.</li>
+        </ul>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           FINAL DE LA PART A
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2 style="border:0; margin-top:2rem;">🎉 Has acabat la Part A!</h2>
+        <p>Acabes de completar la primera meitat del curs: <strong>JavaScript de consola</strong>. Ja tens totes les eines bàsiques que comparteixen tots els llenguatges de programació: variables, decisions, bucles, arrays, funcions i objectes.</p>
+        <p>A partir del <strong>capítol 9</strong> entrem a la <strong>Part B</strong>: aprendrem què fa especial JavaScript respecte a altres llenguatges — pot manipular una pàgina web, reaccionar a clics i dibuixar coses al navegador. Construirem un mini-joc al final del curs.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           NAVEGACIÓ
+           ───────────────────────────────────────── -->
+      <nav class="chapter-nav" aria-label="Navegació entre capítols">
+        <a href="capitol-7.html" class="btn-nav btn-nav--prev">← Capítol anterior</a>
+        <a href="capitol-9.html" class="btn-nav btn-nav--next">Capítol següent →</a>
+      </nav>
+
+
+    </div>
+  </main>
+</div>
+
+<script src="capitols.js"></script>
+<script>
+  injectCursLogo();
+  renderSidebar(8);
+  renderSimuladors();
+  initSidebarToggle();
+</script>
+
+<script src="../footer.js"></script>
+</body>
+</html>
