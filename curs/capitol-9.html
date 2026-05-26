@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítol 9 — La pàgina parla (DOM) | JSCat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="curs.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button id="sidebar-toggle" aria-label="Mostra/amaga els capítols" aria-expanded="false">☰</button>
+  <div class="logo">
+    <span class="logo-icon"></span>
+    <span>JSCat</span>
+  </div>
+  <nav class="topbar-nav">
+    <a href="capitol-1.html" class="topbar-nav-link active">Capítols</a>
+    <a href="repte-1.html" class="topbar-nav-link">Reptes</a>
+    <a href="../index.html" class="topbar-nav-link">Simulador</a>
+  </nav>
+  <div class="topbar-actions"></div>
+</header>
+
+<div class="curs-layout">
+  <div id="sidebar-overlay" aria-hidden="true"></div>
+  <nav id="sidebar" class="curs-sidebar" aria-label="Capítols del curs">
+    <div id="sidebar-nav"></div>
+  </nav>
+
+  <main class="curs-content">
+    <div class="chapter-content-inner">
+
+
+      <!-- ─────────────────────────────────────────
+           CAPÇALERA — Part B
+           ───────────────────────────────────────── -->
+      <header class="chapter-header">
+        <span class="chapter-badge" style="background: #fef3c7; color: #92400e;">Capítol 9 · Part B</span>
+        <h1>La pàgina parla: DOM</h1>
+        <p class="chapter-lead">Benvingut a la <strong>Part B</strong> del curs! A partir d'ara JavaScript no es queda dins la consola: pot canviar la pàgina web en directe. Cada vegada que executis el codi veuràs <strong>dues coses</strong>: la pàgina viva (a dalt) i la consola (a sota).</p>
+      </header>
+
+
+      <!-- ─────────────────────────────────────────
+           ATENCIÓ: bucles infinits
+           ───────────────────────────────────────── -->
+      <section class="chapter-section" style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 12px 16px; border-radius: 6px; border-top: 0;">
+        <h2 style="border:0; padding:0; margin-top:0;">⚠ Important</h2>
+        <p style="margin-bottom:0;">En aquesta part del curs el simulador NO pot aturar automàticament un bucle infinit. Si el teu programa es queda penjat (la pàgina no respon), tanca la pestanya i torna-la a obrir. <strong>Revisa sempre que els teus bucles tinguin una condició de sortida abans d'executar.</strong></p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 1 — Què és el DOM
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Què és el DOM</h2>
+
+        <p>Una pàgina web és un document HTML: una col·lecció d'elements (títols, paràgrafs, botons…) organitzats en forma d'arbre. JavaScript veu aquesta estructura com un objecte gegant anomenat <strong>DOM</strong> (<em>Document Object Model</em>). A través del DOM, pots:</p>
+
+        <ul>
+          <li><strong>Llegir</strong> el contingut de qualsevol element.</li>
+          <li><strong>Modificar</strong> el text, els colors, l'estil…</li>
+          <li><strong>Afegir</strong> i <strong>eliminar</strong> elements.</li>
+        </ul>
+
+        <p>L'objecte central és <code>document</code>. És com el <code>Math</code> que vam veure abans: no l'has de declarar, ja existeix. T'hi pots referir des de qualsevol part del codi.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 2 — querySelector
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Buscar un element: <code>document.querySelector</code></h2>
+
+        <p>Per fer alguna cosa amb un element de la pàgina, primer cal trobar-lo. La funció més potent és <code>document.querySelector("selector")</code>. El <em>selector</em> és el mateix que faries servir en CSS:</p>
+
+        <ul>
+          <li><code>"h1"</code> — el primer element <code>&lt;h1&gt;</code> de la pàgina.</li>
+          <li><code>"p"</code> — el primer paràgraf.</li>
+          <li><code>"#titol"</code> — l'element amb <code>id="titol"</code>.</li>
+          <li><code>".destacat"</code> — el primer element amb <code>class="destacat"</code>.</li>
+        </ul>
+
+        <p>El simulador següent té la pàgina:</p>
+        <pre class="code-example">&lt;h1&gt;Hola, món!&lt;/h1&gt;
+&lt;p&gt;Aquesta és la meva pàgina.&lt;/p&gt;</pre>
+
+        <p>Executa i veuràs que <code>querySelector</code> retorna un objecte que representa l'element trobat:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}</style></head><body><h1>Hola, món!</h1><p>Aquesta és la meva pàgina.</p></body></html>'
+             data-code='const titol = document.querySelector("h1");
+console.log(titol);'
+             data-readonly="true"
+             data-height="360">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 3 — textContent
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Llegir i canviar el text: <code>.textContent</code></h2>
+
+        <p>Quan tens un element, la propietat <code>.textContent</code> et dona el text de dins. Pots <strong>llegir-lo</strong>:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}</style></head><body><h1>Hola, món!</h1><p>Aquesta és la meva pàgina.</p></body></html>'
+             data-code='const titol = document.querySelector("h1");
+console.log(titol.textContent);'
+             data-readonly="true"
+             data-height="360">
+        </div>
+
+        <p>O pots <strong>canviar-lo</strong>, assignant un nou valor. Observa la pàgina viva quan executis:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}</style></head><body><h1>Hola, món!</h1><p>Aquesta és la meva pàgina.</p></body></html>'
+             data-code='const titol = document.querySelector("h1");
+titol.textContent = "Adéu, món!";
+console.log("Títol canviat!");'
+             data-height="360">
+        </div>
+
+        <p>El text del <code>&lt;h1&gt;</code> ha canviat a la pàgina viva. Aquest és el moment màgic: JavaScript ha modificat HTML que ja era a la pantalla.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 4 — style
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Canviar l'estil: <code>.style</code></h2>
+
+        <p>Cada element té una propietat <code>.style</code> que et permet modificar el seu CSS directament. Els noms de les propietats CSS amb guió (com <code>background-color</code> o <code>font-size</code>) es transformen en <strong>camelCase</strong>: <code>backgroundColor</code>, <code>fontSize</code>.</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}</style></head><body><h1>Hola, món!</h1><p>Aquesta és la meva pàgina.</p></body></html>'
+             data-code='const titol = document.querySelector("h1");
+titol.style.color = "red";
+titol.style.backgroundColor = "yellow";
+titol.style.fontSize = "48px";'
+             data-readonly="true"
+             data-height="380">
+        </div>
+
+        <p>Els valors són sempre <strong>strings</strong>, exactament com els escriuries en CSS. Per a mides cal escriure les unitats: <code>"48px"</code>, no <code>48</code>.</p>
+
+        <p>Algunes propietats útils:</p>
+        <ul>
+          <li><code>.style.color</code> — color del text</li>
+          <li><code>.style.backgroundColor</code> — color de fons</li>
+          <li><code>.style.fontSize</code> — mida de lletra (<code>"24px"</code>)</li>
+          <li><code>.style.fontWeight</code> — gruix (<code>"bold"</code>)</li>
+          <li><code>.style.textAlign</code> — alineació (<code>"center"</code>)</li>
+          <li><code>.style.border</code> — vora (<code>"2px solid black"</code>)</li>
+          <li><code>.style.padding</code> — espaiat intern</li>
+        </ul>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 5 — querySelectorAll
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Tots a l'hora: <code>querySelectorAll</code></h2>
+
+        <p><code>querySelector</code> retorna només el <strong>primer</strong> element que troba. Si vols tots els elements que coincideixen, fas servir <code>querySelectorAll</code>, que retorna una col·lecció que pots recórrer amb un bucle:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}li{padding:4px 0;}</style></head><body><h1>La meva llista</h1><ul><li>Pomes</li><li>Peres</li><li>Plàtans</li></ul></body></html>'
+             data-code='const elements = document.querySelectorAll("li");
+console.log("He trobat", elements.length, "elements");
+
+for (const el of elements) {
+  el.style.color = "blue";
+  el.style.fontWeight = "bold";
+}'
+             data-readonly="true"
+             data-height="400">
+        </div>
+
+        <p>Tots els <code>&lt;li&gt;</code> han canviat alhora. Aquest és un patró molt habitual: trobar molts elements i fer-los alguna cosa a tots.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 6 — getElementById
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Una alternativa: <code>getElementById</code></h2>
+
+        <p>Hi ha una altra forma de trobar un element, especialment quan tens un <code>id</code> únic: <code>document.getElementById("nom-id")</code>. És equivalent a <code>document.querySelector("#nom-id")</code>, però sense necessitat del <code>#</code>:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}</style></head><body><h1>Pàgina</h1><p id="missatge">Missatge per canviar</p></body></html>'
+             data-code='const p = document.getElementById("missatge");
+p.textContent = "Hola des de JavaScript!";
+p.style.color = "green";'
+             data-readonly="true"
+             data-height="360">
+        </div>
+
+        <p>Es coneix també com a "ge<strong>tEle</strong>mentById" i és potser la forma més antiga i ràpida. <code>querySelector</code> és més modern i flexible (admet qualsevol selector CSS), però <code>getElementById</code> encara s'usa molt.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 7 — innerHTML
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2><code>.textContent</code> vs <code>.innerHTML</code></h2>
+
+        <p>A part de <code>.textContent</code>, hi ha una altra propietat anomenada <code>.innerHTML</code>. La diferència és important:</p>
+
+        <ul>
+          <li><code>.textContent</code> — només text. Si poses <code>"&lt;b&gt;hola&lt;/b&gt;"</code>, es mostra exactament així, amb les etiquetes visibles.</li>
+          <li><code>.innerHTML</code> — interpreta HTML. Si poses <code>"&lt;b&gt;hola&lt;/b&gt;"</code>, l'etiqueta es renderitza i es veu "<b>hola</b>" en negreta.</li>
+        </ul>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}div{margin:8px 0;border:1px solid #ccc;padding:8px;}</style></head><body><div id="a">A</div><div id="b">B</div></body></html>'
+             data-code='document.getElementById("a").textContent = "&lt;b&gt;Negreta amb textContent&lt;/b&gt;";
+document.getElementById("b").innerHTML = "&lt;b&gt;Negreta amb innerHTML&lt;/b&gt;";'
+             data-readonly="true"
+             data-height="380">
+        </div>
+
+        <p>Per defecte, fes servir sempre <code>.textContent</code>. <code>.innerHTML</code> només quan vulguis afegir HTML real (com fer una llista) i estiguis segur que el text no ve de l'usuari (per evitar problemes de seguretat).</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 8 — Errors típics
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Errors típics</h2>
+
+        <p><strong>1. Buscar un element que no existeix</strong> — <code>querySelector</code> retorna <code>null</code> si no troba res. Si intentes accedir a una propietat de <code>null</code>, el codi peta:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}</style></head><body><h1>Hola</h1></body></html>'
+             data-code='const inexistent = document.querySelector("h2");
+console.log(inexistent);
+
+// Aquesta línia peta perquè inexistent és null:
+inexistent.textContent = "X";'
+             data-readonly="true"
+             data-height="380">
+        </div>
+
+        <p>L'error és <code>TypeError: Cannot set properties of null</code>. Sempre comprova el resultat si no estàs segur que l'element existeixi.</p>
+
+        <p><strong>2. Confondre <code>style</code> amb noms CSS amb guió</strong> — recorda que els noms van en camelCase, no com al CSS:</p>
+
+        <pre class="code-example">// CSS:
+background-color: red;
+font-size: 24px;
+
+// JavaScript:
+element.style.backgroundColor = "red";   // ✓
+element.style.fontSize = "24px";          // ✓
+
+// Això NO funciona:
+element.style.background-color = "red";   // ✗ ERROR
+element.style["background-color"] = "red"; // ✓ (alternativa amb claudàtors)</pre>
+
+        <p><strong>3. Oblidar les unitats</strong> — moltes propietats CSS necessiten unitats explícites (<code>px</code>, <code>em</code>, <code>%</code>):</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}</style></head><body><h1>Títol</h1></body></html>'
+             data-code='const titol = document.querySelector("h1");
+titol.style.fontSize = 48;     // sense unitats: NO funciona
+console.log("Mida aplicada:", titol.style.fontSize);'
+             data-readonly="true"
+             data-height="360">
+        </div>
+
+        <p>La consola mostra que <code>fontSize</code> ha quedat com a string buit: el navegador ha ignorat l'assignació. Has d'escriure <code>"48px"</code>.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           EXERCICI
+           ───────────────────────────────────────── -->
+      <section class="chapter-section chapter-exercise">
+        <h2>Exercici</h2>
+
+        <div class="exercise-enunciat">
+          Tens una pàgina amb un <code>&lt;h1&gt;</code> i tres paràgrafs. Escriu el codi perquè:
+          <ol>
+            <li>El títol passi a dir <strong>"JSCat mola"</strong>.</li>
+            <li>El títol tingui el color <strong>"purple"</strong>.</li>
+            <li>Tots els paràgrafs tinguin el color de fons <strong>"lightyellow"</strong>.</li>
+          </ol>
+        </div>
+
+        <p>Has de fer servir <code>document.querySelector</code> i <code>document.querySelectorAll</code>. Quan executis, ho veuràs a la pàgina viva.</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}p{padding:6px;margin:4px 0;}</style></head><body><h1>Títol antic</h1><p>Primer paràgraf.</p><p>Segon paràgraf.</p><p>Tercer paràgraf.</p></body></html>'
+             data-code='// 1) Canvia el text del &lt;h1&gt;:
+
+
+// 2) Canvia el color del &lt;h1&gt; a purple:
+
+
+// 3) Pinta el fons de tots els &lt;p&gt; de lightyellow:
+
+'
+             data-testcode='// Comprovacions automàtiques (es mostraran a la consola):
+const h1 = document.querySelector("h1");
+const ps = document.querySelectorAll("p");
+console.log("---");
+console.log("Text del h1:", h1.textContent);
+console.log("Color del h1:", h1.style.color);
+console.log("Nombre de p:", ps.length);
+let okFons = true;
+for (const p of ps) {
+  if (p.style.backgroundColor !== "lightyellow") okFons = false;
+}
+console.log("Fons OK:", okFons);'
+             data-expected='---
+Text del h1: JSCat mola
+Color del h1: purple
+Nombre de p: 3
+Fons OK: true'
+             data-goal-id="cap-9-ex"
+             data-height="500">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           RESUM
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Resum</h2>
+        <ul>
+          <li>El <strong>DOM</strong> és la representació de la pàgina HTML com a objecte JavaScript. L'objecte principal és <code>document</code>.</li>
+          <li><code>document.querySelector("selector")</code> troba el primer element. El selector és sintaxi CSS: <code>"h1"</code>, <code>"#id"</code>, <code>".classe"</code>.</li>
+          <li><code>document.querySelectorAll("selector")</code> en retorna tots, en una col·lecció que pots recórrer.</li>
+          <li><code>document.getElementById("id")</code> és una alternativa més directa per a <code>id</code>s únics.</li>
+          <li><code>element.textContent</code> llegeix o canvia el text de l'element.</li>
+          <li><code>element.innerHTML</code> permet canviar HTML real, però vés amb compte.</li>
+          <li><code>element.style.X</code> modifica el CSS. Els noms van en camelCase: <code>backgroundColor</code>, no <code>background-color</code>.</li>
+          <li>Si l'element no existeix, <code>querySelector</code> retorna <code>null</code> — comprova abans d'accedir a propietats.</li>
+        </ul>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           NAVEGACIÓ
+           ───────────────────────────────────────── -->
+      <nav class="chapter-nav" aria-label="Navegació entre capítols">
+        <a href="capitol-8.html" class="btn-nav btn-nav--prev">← Capítol anterior</a>
+        <a href="capitol-10.html" class="btn-nav btn-nav--next">Capítol següent →</a>
+      </nav>
+
+
+    </div>
+  </main>
+</div>
+
+<script src="capitols.js"></script>
+<script>
+  injectCursLogo();
+  renderSidebar(9);
+  renderSimuladors();
+  initSidebarToggle();
+</script>
+
+<script src="../footer.js"></script>
+</body>
+</html>

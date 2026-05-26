@@ -11,6 +11,8 @@
 //   ?testcode=BASE64 → codi JS afegit al final del codi de l'alumne
 //   ?goalId=ID       → identificador del repte (per postMessage)
 //   ?theme=light     → força mode clar
+//   ?mode=dom        → mode pàgina viva (capítols 9-12)
+//   ?html=BASE64     → HTML base per a l'iframe del mode dom
 // ════════════════════════════════════════════════════════
 
 (function init() {
@@ -20,6 +22,11 @@
   function dec(b64) {
     try { return decodeURIComponent(escape(atob(b64))); } catch { return null; }
   }
+
+  // Detectem mode DOM ben aviat
+  const isDomMode = params.get('mode') === 'dom';
+  S.mode = isDomMode ? 'dom' : 'console';
+  if (isDomMode) document.body.classList.add('dom-mode');
 
   // Origen segur per a postMessage
   J.parentOrigin = (() => {
@@ -95,16 +102,23 @@
     S.freeStdin = urlStdin;
   }
 
-  // 3) Spawna el worker (preparat per al primer run)
-  J.jsInit();
+  // 3) Inicialitza el runtime adequat
+  if (isDomMode) {
+    // En mode DOM, llegim l'HTML base (si no n'hi ha, n'usem un de mínim)
+    const urlHtml = params.get('html') ? dec(params.get('html')) : null;
+    const baseHtml = urlHtml || '<!DOCTYPE html>\n<html><head><meta charset="UTF-8"><style>body{font-family:system-ui,sans-serif;padding:16px;margin:0;}</style></head><body>\n<p>Pàgina d\'exemple</p>\n</body></html>';
+    J.domInit(baseHtml);
+  } else {
+    J.jsInit();
+  }
 
   // 4) Estat inicial
   J.setStateUI('idle');
 
   // 5) Mostra el panell stdin si el codi inicial usa prompt() i estem en mode lliure
-  if (!S.testCases && !S.freeStdin) {
+  //    (només en mode consola; en mode dom el prompt és nadiu del navegador)
+  if (!isDomMode && !S.testCases && !S.freeStdin) {
     const code = ta ? ta.value : '';
-    // _usesPrompt és private a ui.js, fem una comprovació senzilla aquí
     if (/\bprompt\s*\(/.test(code)) {
       J.consoleShowStdinPanel();
     }

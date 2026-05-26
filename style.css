@@ -389,6 +389,68 @@ body.light .hl-cm  { color: #9ca3af; }
 
 
 /* ══════════════════════════════════════════════════════
+   MODE DOM — Pàgina viva + consola petita (Part B)
+   S'activa amb body.dom-mode
+══════════════════════════════════════════════════════ */
+
+.dom-col {
+  display: none;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+body.dom-mode .console-col { display: none; }
+body.dom-mode .dom-col {
+  display: flex;
+  grid-column: 2;
+}
+
+.dom-header {
+  padding: 6px 12px;
+  font-size: 0.68rem;
+  color: var(--muted);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.dom-area {
+  flex: 1 1 60%;
+  min-height: 120px;
+  overflow: hidden;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+}
+
+#dom-iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #fff;
+  display: block;
+}
+
+.dom-console-header {
+  border-top: 1px solid var(--border);
+}
+
+.dom-console-area {
+  flex: 1 1 40%;
+  min-height: 70px;
+  max-height: 50%;
+}
+
+#dom-console-output {
+  font-family: var(--mono);
+  font-size: var(--ed-font-size);
+  line-height: 1.7;
+}
+
+
+/* ══════════════════════════════════════════════════════
    MODE EMBED — Per a iframes dins del curs
 ══════════════════════════════════════════════════════ */
 

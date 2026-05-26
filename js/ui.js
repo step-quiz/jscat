@@ -100,36 +100,48 @@ function _ensureStdinPanel(code) {
 
 // ── Executa el programa ──────────────────────────────────
 async function runProgram() {
-  J.consoleClear();
-  J.clearLineMarks();
+  const S = J.state;
+  const isDom = S.mode === 'dom';
+
+  // Neteja: la consola correcta segons el mode
+  if (isDom) {
+    J.domConsoleClear();
+    J.domReset();  // reinicia l'iframe per a un estat net
+  } else {
+    J.consoleClear();
+    J.clearLineMarks();
+  }
 
   const userCode = (document.getElementById('code-editor') || {}).value || '';
   if (!userCode.trim()) {
-    J.consolePush('⚠ Escriu codi abans d\'executar.', 'dim');
+    (isDom ? J.domConsolePush : J.consolePush)('⚠ Escriu codi abans d\'executar.', 'dim');
     return;
   }
 
   _notifyClear();
 
-  const S = J.state;
   const finalCode = _buildFinalCode(userCode);
 
   // ── Cas 1: sense validació (simulador lliure) ──
   if (!S.testCases) {
-    let stdin = S.freeStdin || null;
-    if (!stdin) {
-      const panelStdin = J.consoleGetStdin();
-      if (panelStdin) stdin = panelStdin;
+    if (isDom) {
+      await J.domRunAsync(finalCode);
+    } else {
+      let stdin = S.freeStdin || null;
+      if (!stdin) {
+        const panelStdin = J.consoleGetStdin();
+        if (panelStdin) stdin = panelStdin;
+      }
+      J.consoleHideStdinPanel();
+      await J.jsRunAsync(finalCode, stdin);
+      _ensureStdinPanel(userCode);
     }
-    J.consoleHideStdinPanel();
-    await J.jsRunAsync(finalCode, stdin);
-    _ensureStdinPanel(userCode);
     return;
   }
 
   // ── Cas 2: amb validació (batch) ──
   setStateUI('validating');
-  J.consolePush(J.t('log.validating'), 'dim');
+  (isDom ? J.domConsolePush : J.consolePush)(J.t('log.validating'), 'dim');
   await _runBatchValidation(finalCode);
 }
 
@@ -137,16 +149,20 @@ async function runProgram() {
 // ── Itera pels test cases en batch ──────────────────────
 async function _runBatchValidation(finalCode) {
   const S = J.state;
+  const isDom = S.mode === 'dom';
   const results = [];
 
   for (let i = 0; i < S.testCases.length; i++) {
     const tc = S.testCases[i];
 
     if (S.testCases.length > 1) {
-      J.consolePush('── Test ' + (i + 1) + '/' + S.testCases.length + ' ──', 'dim');
+      (isDom ? J.domConsolePush : J.consolePush)('── Test ' + (i + 1) + '/' + S.testCases.length + ' ──', 'dim');
     }
 
-    const output = await J.jsRunAsync(finalCode, tc.stdin || null);
+    // En mode dom no usem stdin; sempre passem el codi tal qual.
+    const output = isDom
+      ? await J.domRunAsync(finalCode)
+      : await J.jsRunAsync(finalCode, tc.stdin || null);
 
     const passed = output !== null &&
                    _normalizeOutput(output) === _normalizeOutput(tc.expected || '');
@@ -168,12 +184,27 @@ async function _runBatchValidation(finalCode) {
 
 // ── Atura el programa ────────────────────────────────────
 function stopProgram() {
-  J.jsKill();
+  if (J.state.mode === 'dom') {
+    // En mode dom no podem matar un iframe bloquejat des de fora;
+    // el millor que podem fer és recarregar-lo per a la propera execució.
+    J.domReset();
+    J.setStateUI('idle');
+  } else {
+    J.jsKill();
+  }
 }
 
 
 // ── Neteja la consola ────────────────────────────────────
 function resetConsole() {
+  if (J.state.mode === 'dom') {
+    J.domConsoleClear();
+    J.domReset();
+    J.setStateUI('idle');
+    J.domConsolePush(J.t('log.reset'), 'dim');
+    _notifyClear();
+    return;
+  }
   J.consoleClear();
   J.clearLineMarks();
   J.setStateUI('idle');

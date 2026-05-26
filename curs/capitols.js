@@ -137,6 +137,8 @@ function renderSimuladors() {
     var tests    = div.getAttribute('data-tests') || '';
     var testcode = div.getAttribute('data-testcode') || '';
     var goalId   = div.getAttribute('data-goal-id') || '';
+    var mode     = div.getAttribute('data-mode') || '';   // 'dom' per a Part B
+    var html     = div.getAttribute('data-html') || '';   // HTML base per a mode dom
 
     var params = new URLSearchParams();
     params.set('embed', '1');
@@ -149,6 +151,8 @@ function renderSimuladors() {
     if (tests)    params.set('tests', btoa(unescape(encodeURIComponent(tests))));
     if (testcode) params.set('testcode', btoa(unescape(encodeURIComponent(testcode))));
     if (goalId)   params.set('goalId', goalId);
+    if (mode)     params.set('mode', mode);
+    if (html)     params.set('html', btoa(unescape(encodeURIComponent(html))));
 
     var iframe = document.createElement('iframe');
     iframe.src = '../index.html?' + params.toString();

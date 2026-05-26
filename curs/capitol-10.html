@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítol 10 — Esdeveniments | JSCat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="curs.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button id="sidebar-toggle" aria-label="Mostra/amaga els capítols" aria-expanded="false">☰</button>
+  <div class="logo">
+    <span class="logo-icon"></span>
+    <span>JSCat</span>
+  </div>
+  <nav class="topbar-nav">
+    <a href="capitol-1.html" class="topbar-nav-link active">Capítols</a>
+    <a href="repte-1.html" class="topbar-nav-link">Reptes</a>
+    <a href="../index.html" class="topbar-nav-link">Simulador</a>
+  </nav>
+  <div class="topbar-actions"></div>
+</header>
+
+<div class="curs-layout">
+  <div id="sidebar-overlay" aria-hidden="true"></div>
+  <nav id="sidebar" class="curs-sidebar" aria-label="Capítols del curs">
+    <div id="sidebar-nav"></div>
+  </nav>
+
+  <main class="curs-content">
+    <div class="chapter-content-inner">
+
+
+      <!-- ─────────────────────────────────────────
+           CAPÇALERA
+           ───────────────────────────────────────── -->
+      <header class="chapter-header">
+        <span class="chapter-badge" style="background: #fef3c7; color: #92400e;">Capítol 10 · Part B</span>
+        <h1>Esdeveniments</h1>
+        <p class="chapter-lead">Al capítol anterior, el codi feia coses a la pàgina <strong>una sola vegada</strong>, en executar-se. Aquí aprendrem a fer que el codi <strong>reaccioni</strong> quan l'usuari fa alguna cosa: un clic, escriure en un camp, prémer una tecla… Això és el que converteix una pàgina HTML en una <em>aplicació</em>.</p>
+      </header>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 1 — Què és un esdeveniment
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Què és un esdeveniment?</h2>
+
+        <p>Un <strong>esdeveniment</strong> (en anglès, <em>event</em>) és una cosa que passa a la pàgina: un clic del ratolí, una tecla premuda, un dit que toca la pantalla, una imatge que acaba de carregar-se… Sempre que passa una d'aquestes coses, el navegador "<strong>llança</strong>" un esdeveniment.</p>
+
+        <p>El que farem és <strong>escoltar</strong> determinats esdeveniments en determinats elements i dir-li al navegador <em>«quan passi això, executa aquesta funció»</em>. Aquest patró s'anomena <strong>event listener</strong>.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 2 — addEventListener click
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>El primer clic: <code>addEventListener</code></h2>
+
+        <p>La funció clau és <code>addEventListener</code>, que es crida sobre l'element que vols escoltar. Rep dos arguments: el <strong>tipus d'esdeveniment</strong> (un string) i la <strong>funció</strong> a executar quan passi:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}button{padding:8px 16px;font-size:16px;cursor:pointer;}</style></head><body><button id="boto">Clica\'m!</button></body></html>'
+             data-code='const boto = document.querySelector("button");
+
+boto.addEventListener("click", function() {
+  console.log("M&apos;has clicat!");
+});'
+             data-readonly="true"
+             data-height="380">
+        </div>
+
+        <p>Després d'executar, clica el botó <strong>a la pàgina viva</strong> i fixa't en la consola. Cada clic dispara la funció i imprimeix una nova línia.</p>
+
+        <p>Mira la sintaxi amb cura. <strong>Aquest és el primer cop que passem una funció com a argument d'una altra funció.</strong> No la cridem (no posem parèntesis), només la donem perquè <code>addEventListener</code> la cridi més endavant. El nom tècnic és <strong>callback</strong>: una funció que <em>tornem a cridar</em> quan passa alguna cosa.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 3 — Modificar la pàgina des d'un esdeveniment
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Modificar la pàgina des de la funció</h2>
+
+        <p>Combinant esdeveniments amb el que vam aprendre al capítol 9, ja pots fer interfícies de veritat. Per exemple, un botó que canvia un text:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}h1{margin:0 0 12px;}button{padding:8px 16px;font-size:16px;cursor:pointer;}</style></head><body><h1 id="titol">Original</h1><button id="boto">Canvia el títol</button></body></html>'
+             data-code='const titol = document.querySelector("#titol");
+const boto = document.querySelector("#boto");
+
+boto.addEventListener("click", function() {
+  titol.textContent = "He canviat!";
+  titol.style.color = "tomato";
+});'
+             data-readonly="true"
+             data-height="400">
+        </div>
+
+        <p>Cada vegada que cliques, la funció s'executa i modifica el títol. La primera vegada veuràs el canvi; els clics següents repeteixen la mateixa acció (que ja no fa res visible, perquè el títol ja diu "He canviat!").</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 4 — Estat: comptador
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Recordar coses: variables fora de la funció</h2>
+
+        <p>Què passa si volem comptar <strong>quantes vegades</strong> s'ha clicat el botó? Necessitem una variable que recordi el valor entre clics. La clau és declarar-la <strong>fora</strong> de la funció (al codi principal), i modificar-la <strong>des de dins</strong>:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}h1{margin:0 0 12px;}button{padding:8px 16px;font-size:16px;cursor:pointer;}</style></head><body><h1 id="comptador">0</h1><button id="boto">+1</button></body></html>'
+             data-code='let n = 0;
+
+const comptador = document.querySelector("#comptador");
+const boto = document.querySelector("#boto");
+
+boto.addEventListener("click", function() {
+  n = n + 1;
+  comptador.textContent = n;
+});'
+             data-readonly="true"
+             data-height="400">
+        </div>
+
+        <p>Clica el botó diverses vegades. La variable <code>n</code> es declara <strong>una sola vegada</strong> (val 0 al començar) i la funció la incrementa a cada clic. Així, el codi té <strong>memòria</strong>.</p>
+
+        <p>Compte: si haguéssim declarat <code>let n = 0</code> <em>dins</em> de la funció, cada clic la tornaria a posar a 0. Per això la posem fora.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 5 — L'objecte event
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>L'objecte <code>event</code></h2>
+
+        <p>Quan el navegador crida la nostra funció, li passa un argument: un objecte <strong>event</strong> amb informació sobre què ha passat. Conté coses com la posició del clic, l'element clicat, quina tecla s'ha premut, etc.</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}#zona{width:100%;height:200px;background:#f0f8ff;border:2px dashed #888;cursor:crosshair;}</style></head><body><div id="zona">Clica aquí dins</div></body></html>'
+             data-code='const zona = document.querySelector("#zona");
+
+zona.addEventListener("click", function(event) {
+  console.log("X:", event.clientX, " Y:", event.clientY);
+});'
+             data-readonly="true"
+             data-height="420">
+        </div>
+
+        <p>Mou el ratolí dins de la zona i clica en diferents punts. Veuràs com canvien les coordenades a la consola. <code>event.clientX</code> i <code>event.clientY</code> et donen on s'ha produït el clic.</p>
+
+        <p>Pots posar el paràmetre amb el nom que vulguis (<code>event</code>, <code>e</code>, <code>ev</code>…), però per convenció s'acostuma a escriure <code>event</code> o, abreujat, <code>e</code>.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 6 — Inputs de text
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Llegir el que escriu l'usuari: <code>&lt;input&gt;</code></h2>
+
+        <p>Una pàgina pot tenir un quadre de text on l'usuari escriu coses (un <code>&lt;input&gt;</code>). Per llegir el que hi ha escrit, accedeixes a la propietat <code>.value</code> de l'element:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}input{padding:6px 10px;font-size:16px;}button{padding:6px 12px;font-size:16px;margin-left:8px;}p{font-size:18px;}</style></head><body><input id="nom" type="text" placeholder="Escriu el teu nom"><button id="saluda">Saluda</button><p id="resultat"></p></body></html>'
+             data-code='const inputNom = document.querySelector("#nom");
+const botoSaluda = document.querySelector("#saluda");
+const resultat = document.querySelector("#resultat");
+
+botoSaluda.addEventListener("click", function() {
+  const nom = inputNom.value;
+  resultat.textContent = `Hola, ${nom}!`;
+});'
+             data-readonly="true"
+             data-height="440">
+        </div>
+
+        <p>Escriu un nom al quadre de text i clica "Saluda". El text del <code>&lt;p&gt;</code> resultat es modifica amb el que has escrit.</p>
+
+        <p>Hi ha un altre esdeveniment útil amb <code>&lt;input&gt;</code>: <code>"input"</code>. Es dispara <strong>cada vegada</strong> que l'usuari escriu o esborra un caràcter. Així pots fer coses en temps real, sense necessitat de cap botó:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}input{padding:6px 10px;font-size:16px;width:240px;}p{font-size:24px;font-weight:bold;}</style></head><body><input id="text" type="text" placeholder="Escriu alguna cosa"><p id="reflex">(esperant...)</p></body></html>'
+             data-code='const text = document.querySelector("#text");
+const reflex = document.querySelector("#reflex");
+
+text.addEventListener("input", function() {
+  reflex.textContent = text.value.toUpperCase();
+});'
+             data-readonly="true"
+             data-height="380">
+        </div>
+
+        <p>Escriu al quadre i mira com el paràgraf de sota es va actualitzant en majúscules en temps real. Aquesta interactivitat és el que fa que les aplicacions web modernes se sentin "vives".</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 7 — Altres esdeveniments
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Altres esdeveniments útils</h2>
+
+        <p>Hi ha dotzenes d'esdeveniments diferents. Els més habituals:</p>
+
+        <ul>
+          <li><code>"click"</code> — clic del ratolí (ja l'has vist).</li>
+          <li><code>"input"</code> — l'usuari escriu en un <code>&lt;input&gt;</code> o <code>&lt;textarea&gt;</code>.</li>
+          <li><code>"change"</code> — l'usuari acaba d'editar i marxa de l'element.</li>
+          <li><code>"mousemove"</code> — el ratolí es mou per damunt d'un element.</li>
+          <li><code>"mouseover"</code> / <code>"mouseout"</code> — el ratolí entra o surt de l'element.</li>
+          <li><code>"keydown"</code> / <code>"keyup"</code> — l'usuari prem o deixa anar una tecla.</li>
+          <li><code>"submit"</code> — un formulari s'envia.</li>
+        </ul>
+
+        <p>Tots funcionen amb el mateix patró: <code>element.addEventListener("nom", callback)</code>. L'objecte <code>event</code> que rep la funció té propietats específiques per a cada tipus (per exemple, <code>event.key</code> per a tecles).</p>
+
+        <p>Aquí en tens un que respon a tecles. Cliquem primer al quadre per donar-li el focus, i després premem qualsevol tecla:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}#caixa{width:200px;height:120px;background:#fef3c7;border:2px solid #f59e0b;display:flex;align-items:center;justify-content:center;font-size:48px;font-weight:bold;color:#92400e;}p{font-size:14px;color:#666;}</style></head><body><p>Clica primer a dins la caixa, després prem una tecla.</p><div id="caixa" tabindex="0">?</div></body></html>'
+             data-code='const caixa = document.querySelector("#caixa");
+
+caixa.addEventListener("keydown", function(event) {
+  caixa.textContent = event.key;
+  console.log("Tecla:", event.key);
+});'
+             data-readonly="true"
+             data-height="440">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 8 — Errors típics
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Errors típics</h2>
+
+        <p><strong>1. Cridar la funció enlloc de passar-la</strong> — l'error més comú dels principiants:</p>
+
+        <pre class="code-example">// ✗ INCORRECTE — la funció es crida immediatament,
+//   i passem el resultat (undefined) a addEventListener
+boto.addEventListener("click", funcio());
+
+// ✓ CORRECTE — passem la funció sense cridar-la
+boto.addEventListener("click", funcio);</pre>
+
+        <p>Recorda: amb parèntesis, <strong>crides</strong> la funció ara mateix. Sense parèntesis, <strong>referencies</strong> la funció perquè algú altre la cridi després. Aquí volem el segon.</p>
+
+        <p><strong>2. Declarar la variable d'estat dins la funció</strong>:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}button{padding:8px 16px;font-size:16px;}</style></head><body><h1 id="num">0</h1><button id="b">+1</button></body></html>'
+             data-code='// BUG: la variable n es reseteja a cada clic
+const num = document.querySelector("#num");
+const b = document.querySelector("#b");
+
+b.addEventListener("click", function() {
+  let n = 0;     // ERROR: hauria d&apos;estar fora
+  n = n + 1;
+  num.textContent = n;
+});'
+             data-readonly="true"
+             data-height="440">
+        </div>
+
+        <p>Clica el botó moltes vegades. El número sempre passa de 0 a 1, mai més. La variable <code>n</code> es declara cada vegada que la funció s'executa, així que sempre torna a començar.</p>
+
+        <p><strong>3. Buscar l'element abans que existeixi</strong> — si el codi s'executa abans que la pàgina hagi creat l'element, <code>querySelector</code> retorna <code>null</code>. En aquest curs no patirem aquest problema perquè el simulador injecta el codi després de carregar la pàgina, però en un projecte teu propi pot passar.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           EXERCICI
+           ───────────────────────────────────────── -->
+      <section class="chapter-section chapter-exercise">
+        <h2>Exercici</h2>
+
+        <div class="exercise-enunciat">
+          Fes un <strong>comptador amb dos botons</strong>: un que sumi 1 al número que es veu, i un altre que en resti 1. El número inicial és 0.
+        </div>
+
+        <p>La pàgina ja té els elements preparats: un <code>&lt;h1 id="num"&gt;</code> que mostra el número, un botó <code>#sumar</code> i un botó <code>#restar</code>. Has d'escriure les dues funcions de clic.</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;text-align:center;}h1{font-size:64px;margin:16px 0;}button{padding:10px 24px;font-size:18px;margin:0 4px;cursor:pointer;}</style></head><body><h1 id="num">0</h1><button id="restar">−1</button><button id="sumar">+1</button></body></html>'
+             data-code='// 1) Declara la variable n fora de les funcions:
+
+
+// 2) Troba els tres elements:
+
+
+// 3) Afegeix els event listeners als dos botons:
+
+'
+             data-testcode='// Test: simulem 5 clics a +1 i 2 a -1, ha de quedar 3
+const _sumar = document.querySelector("#sumar");
+const _restar = document.querySelector("#restar");
+const _num = document.querySelector("#num");
+for (let i = 0; i < 5; i++) _sumar.click();
+for (let i = 0; i < 2; i++) _restar.click();
+console.log("Resultat:", _num.textContent);'
+             data-expected='Resultat: 3'
+             data-goal-id="cap-10-ex"
+             data-height="520">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           RESUM
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Resum</h2>
+        <ul>
+          <li>Un <strong>esdeveniment</strong> és una cosa que passa a la pàgina: clic, tecla, moviment del ratolí…</li>
+          <li><code>element.addEventListener("tipus", funcio)</code> diu al navegador de cridar <code>funcio</code> cada vegada que passi l'esdeveniment.</li>
+          <li>La funció és un <strong>callback</strong>: la passem sense cridar (sense parèntesis); algú altre la cridarà més endavant.</li>
+          <li>Per recordar dades entre crides al callback, declara la variable <strong>fora</strong> de la funció.</li>
+          <li>La funció rep un objecte <code>event</code> amb informació de l'esdeveniment: posició, tecla, element, etc.</li>
+          <li>El valor d'un <code>&lt;input&gt;</code> es llegeix amb la propietat <code>.value</code>.</li>
+          <li>Esdeveniments útils: <code>click</code>, <code>input</code>, <code>change</code>, <code>mousemove</code>, <code>keydown</code>.</li>
+        </ul>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           NAVEGACIÓ
+           ───────────────────────────────────────── -->
+      <nav class="chapter-nav" aria-label="Navegació entre capítols">
+        <a href="capitol-9.html" class="btn-nav btn-nav--prev">← Capítol anterior</a>
+        <a href="capitol-11.html" class="btn-nav btn-nav--next">Capítol següent →</a>
+      </nav>
+
+
+    </div>
+  </main>
+</div>
+
+<script src="capitols.js"></script>
+<script>
+  injectCursLogo();
+  renderSidebar(10);
+  renderSimuladors();
+  initSidebarToggle();
+</script>
+
+<script src="../footer.js"></script>
+</body>
+</html>

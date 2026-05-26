@@ -5,6 +5,7 @@
 J.state = {
   // UI
   currentState: 'idle',   // idle | running | done | error
+  mode:         'console', // 'console' (Worker) o 'dom' (iframe)
 
   // Worker
   worker:       null,

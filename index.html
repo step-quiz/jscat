@@ -81,13 +81,34 @@
     </div>
   </div>
 
-  <!-- Columna dreta: consola de sortida -->
+  <!-- Columna dreta (mode consola): consola de sortida -->
   <div class="console-col">
     <div class="console-header">
       <span>⬤ Consola</span>
     </div>
     <div class="console-area" role="region" aria-label="Consola de sortida" aria-live="polite">
       <div id="console-output"></div>
+    </div>
+  </div>
+
+  <!-- Columna dreta (mode DOM): pàgina viva + consola petita
+       S'activa amb la classe .dom-mode al body (afegida des de main.js
+       quan ?mode=dom és present). -->
+  <div class="dom-col" aria-hidden="true">
+    <div class="dom-header">
+      <span>📺 Pàgina</span>
+    </div>
+    <div class="dom-area">
+      <iframe id="dom-iframe"
+              sandbox="allow-scripts"
+              title="Pàgina en execució"
+              srcdoc=""></iframe>
+    </div>
+    <div class="console-header dom-console-header">
+      <span>⬤ Consola</span>
+    </div>
+    <div class="console-area dom-console-area" aria-live="polite">
+      <div id="dom-console-output"></div>
     </div>
   </div>
 
@@ -103,6 +124,7 @@
 <script src="js/console.js"></script>
 <script src="js/editor.js"></script>
 <script src="js/jsrunner.js"></script>
+<script src="js/domrunner.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/main.js"></script>
 <script src="footer.js"></script>
