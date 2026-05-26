@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítol 12 — Animació i mini-joc | JSCat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="curs.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button id="sidebar-toggle" aria-label="Mostra/amaga els capítols" aria-expanded="false">☰</button>
+  <div class="logo">
+    <span class="logo-icon"></span>
+    <span>JSCat</span>
+  </div>
+  <nav class="topbar-nav">
+    <a href="capitol-1.html" class="topbar-nav-link active">Capítols</a>
+    <a href="repte-1.html" class="topbar-nav-link">Reptes</a>
+    <a href="../index.html" class="topbar-nav-link">Simulador</a>
+  </nav>
+  <div class="topbar-actions"></div>
+</header>
+
+<div class="curs-layout">
+  <div id="sidebar-overlay" aria-hidden="true"></div>
+  <nav id="sidebar" class="curs-sidebar" aria-label="Capítols del curs">
+    <div id="sidebar-nav"></div>
+  </nav>
+
+  <main class="curs-content">
+    <div class="chapter-content-inner">
+
+
+      <!-- ─────────────────────────────────────────
+           CAPÇALERA
+           ───────────────────────────────────────── -->
+      <header class="chapter-header">
+        <span class="chapter-badge" style="background: #fef3c7; color: #92400e;">Capítol 12 · Part B · Final</span>
+        <h1>Animació i mini-joc</h1>
+        <p class="chapter-lead">Aquest és l'últim capítol del curs. Aprendrem a fer <strong>animacions</strong> al canvas, a respondre al teclat en temps real, i ajuntarem tot el que hem après per construir un <strong>mini-joc</strong>.</p>
+      </header>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 1 — La idea de l'animació
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Com es fa una animació</h2>
+
+        <p>Una animació és una <strong>il·lusió òptica</strong>: si dibuixes la mateixa cosa en posicions una mica diferents, una rere l'altra, molt ràpidament, el cervell ho veu com a moviment. Les pel·lícules fan exactament això a 24 imatges per segon. Nosaltres en farem 60.</p>
+
+        <p>El cicle a cada frame és sempre el mateix:</p>
+        <ol>
+          <li><strong>Esborrar</strong> el canvas (eliminar el dibuix anterior).</li>
+          <li><strong>Actualitzar</strong> l'estat (per exemple, sumar 1 a la posició X).</li>
+          <li><strong>Dibuixar</strong> a la nova posició.</li>
+          <li><strong>Programar</strong> el següent frame.</li>
+        </ol>
+
+        <p>La peça clau és <strong><code>requestAnimationFrame</code></strong>, que demana al navegador que cridi una funció el més aviat possible, sincronitzat amb la pantalla (uns 60 cops per segon).</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 2 — Primera animació
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Un quadrat que es mou</h2>
+
+        <p>Comencem amb una animació simple: un quadrat blau que travessa el canvas d'esquerra a dreta. Llegeix el codi amb atenció:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}canvas{border:1px solid #888;background:#fff;}</style></head><body><canvas id="canvas" width="300" height="180"></canvas></body></html>'
+             data-code='const canvas = document.querySelector("#canvas");
+const ctx = canvas.getContext("2d");
+
+let x = 0;   // posició actual del quadrat
+
+function frame() {
+  // 1. Esborrar
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // 2. Actualitzar
+  x = x + 2;
+  if (x > canvas.width) x = 0;   // tornar a començar
+
+  // 3. Dibuixar
+  ctx.fillStyle = "steelblue";
+  ctx.fillRect(x, 70, 40, 40);
+
+  // 4. Programar següent frame
+  requestAnimationFrame(frame);
+}
+
+frame();   // arrenca!'
+             data-readonly="true"
+             data-height="420">
+        </div>
+
+        <p>Hi ha dues coses noves importants:</p>
+
+        <p><strong>L'estat va fora de la funció.</strong> La variable <code>x</code> es declara una sola vegada (a <code>0</code>), igual que vam fer amb el comptador al capítol 10. A cada frame la incrementem una mica. Si la declaréssim dins de <code>frame</code>, sempre tornaria a començar.</p>
+
+        <p><strong>La funció es crida a si mateixa.</strong> Al final de <code>frame()</code> demanem que es torni a cridar amb <code>requestAnimationFrame(frame)</code>. Així s'autoperpetua, frame rere frame. Com amb <code>addEventListener</code>, passem la funció <strong>sense parèntesis</strong> — la donem perquè el navegador la cridi.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 3 — Velocitat com a variable
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Velocitat: una altra variable</h2>
+
+        <p>Si el moviment és <code>x = x + 2</code>, el <code>2</code> és la velocitat. Si la guardem en una variable, podem fer-la canviar i tenir efectes interessants. Mira una pilota que rebota contra les vores:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}canvas{border:1px solid #888;background:#fff;}</style></head><body><canvas id="canvas" width="300" height="200"></canvas></body></html>'
+             data-code='const canvas = document.querySelector("#canvas");
+const ctx = canvas.getContext("2d");
+
+let x = 50, y = 50;     // posició
+let vx = 3, vy = 2;     // velocitat
+const radi = 15;
+
+function frame() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Actualitzar posició
+  x = x + vx;
+  y = y + vy;
+
+  // Rebotar contra les vores
+  if (x - radi < 0 || x + radi > canvas.width)  vx = -vx;
+  if (y - radi < 0 || y + radi > canvas.height) vy = -vy;
+
+  // Dibuixar
+  ctx.fillStyle = "tomato";
+  ctx.beginPath();
+  ctx.arc(x, y, radi, 0, 2 * Math.PI);
+  ctx.fill();
+
+  requestAnimationFrame(frame);
+}
+
+frame();'
+             data-readonly="true"
+             data-height="440">
+        </div>
+
+        <p>Quan la pilota toca una vora, invertim la velocitat (<code>vx = -vx</code>): si anava cap a la dreta, ara va cap a l'esquerra. És el truc clàssic per simular un rebot.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 4 — Controlar amb el teclat
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Controlar amb el teclat</h2>
+
+        <p>Per fer un joc, necessitem que el jugador pugui interactuar. Combinem el que vam aprendre al capítol 10 (esdeveniments de teclat) amb l'animació:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}canvas{border:1px solid #888;background:#fff;outline:none;}p{font-size:13px;color:#555;}</style></head><body><p>Clica el canvas i mou amb les fletxes ← →</p><canvas id="canvas" width="300" height="180" tabindex="0"></canvas></body></html>'
+             data-code='const canvas = document.querySelector("#canvas");
+const ctx = canvas.getContext("2d");
+
+let x = 130;   // posició del jugador
+
+// Quan es prem una tecla, modifiquem x
+canvas.addEventListener("keydown", function(event) {
+  if (event.key === "ArrowLeft")  x = x - 20;
+  if (event.key === "ArrowRight") x = x + 20;
+});
+
+function frame() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "purple";
+  ctx.fillRect(x, 80, 40, 40);
+  requestAnimationFrame(frame);
+}
+
+frame();'
+             data-readonly="true"
+             data-height="440">
+        </div>
+
+        <p>Clica primer dins del canvas perquè rebi les pulsacions de teclat, i després prem ← i → per moure el quadrat.</p>
+
+        <p>Fixa't en la separació de responsabilitats:</p>
+        <ul>
+          <li>El <strong>callback del <code>keydown</code></strong> només canvia la variable <code>x</code>.</li>
+          <li>La funció <strong><code>frame</code></strong> només dibuixa el que indica <code>x</code>.</li>
+        </ul>
+        <p>Les dues parts no es parlen directament — comuniquen a través de l'estat. Aquest patró és la base de tot el desenvolupament de jocs.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 5 — Detecció de col·lisió
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Detecció de col·lisió</h2>
+
+        <p>Per a un joc, sovint cal saber si dues coses estan tocant-se. Per a rectangles, la manera més fàcil és comprovar si <strong>NO estan separats</strong>:</p>
+
+        <pre class="code-example">function colisiona(a, b) {
+  return a.x &lt; b.x + b.amp  &amp;&amp;
+         a.x + a.amp &gt; b.x   &amp;&amp;
+         a.y &lt; b.y + b.alt  &amp;&amp;
+         a.y + a.alt &gt; b.y;
+}</pre>
+
+        <p>La funció rep dos objectes amb <code>x</code>, <code>y</code>, <code>amp</code> (amplada) i <code>alt</code> (alçada), i retorna <code>true</code> si es toquen. La lògica és «<em>cap dels dos està completament a un costat de l'altre</em>».</p>
+
+        <p>Provem-la amb un simulador. Mou el quadrat blau amb les fletxes i mira com canvia el color quan toca el quadrat vermell:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}canvas{border:1px solid #888;background:#fff;outline:none;}p{font-size:13px;color:#555;}</style></head><body><p>Clica el canvas i mou amb ← → ↑ ↓ per xocar amb el quadrat vermell</p><canvas id="canvas" width="300" height="200" tabindex="0"></canvas></body></html>'
+             data-code='const canvas = document.querySelector("#canvas");
+const ctx = canvas.getContext("2d");
+
+const jugador  = { x: 30,  y: 80,  amp: 30, alt: 30 };
+const enemic   = { x: 200, y: 80,  amp: 30, alt: 30 };
+
+function colisiona(a, b) {
+  return a.x < b.x + b.amp &&
+         a.x + a.amp > b.x &&
+         a.y < b.y + b.alt &&
+         a.y + a.alt > b.y;
+}
+
+canvas.addEventListener("keydown", function(e) {
+  if (e.key === "ArrowLeft")  jugador.x -= 10;
+  if (e.key === "ArrowRight") jugador.x += 10;
+  if (e.key === "ArrowUp")    jugador.y -= 10;
+  if (e.key === "ArrowDown")  jugador.y += 10;
+});
+
+function frame() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // El jugador canvia de color si toca l&apos;enemic
+  ctx.fillStyle = colisiona(jugador, enemic) ? "lightgreen" : "steelblue";
+  ctx.fillRect(jugador.x, jugador.y, jugador.amp, jugador.alt);
+
+  ctx.fillStyle = "tomato";
+  ctx.fillRect(enemic.x, enemic.y, enemic.amp, enemic.alt);
+
+  requestAnimationFrame(frame);
+}
+
+frame();'
+             data-readonly="true"
+             data-height="460">
+        </div>
+
+        <p>El jugador es pinta de verd clar quan toca el quadrat vermell, i de blau quan estan separats.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 6 — Mini-joc final
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>El mini-joc final: <em>Atrapa el quadrat</em></h2>
+
+        <p>Ajuntem-ho tot. Aquest mini-joc combina:</p>
+        <ul>
+          <li>Canvas i dibuix</li>
+          <li>Animació amb <code>requestAnimationFrame</code></li>
+          <li>Estat: posicions, puntuació</li>
+          <li>Esdeveniments de teclat</li>
+          <li>Detecció de col·lisió</li>
+          <li>Funcions, objectes, condicions… tot el que has après</li>
+        </ul>
+
+        <p>L'objectiu: mou el quadrat blau amb les fletxes i atrapa els quadrats vermells. Cada vegada que un quadrat vermell és atrapat, suma 1 punt i n'apareix un de nou en una posició aleatòria.</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:8px 16px;margin:0;}canvas{border:1px solid #888;background:#fff;outline:none;}#info{font-family:system-ui;font-size:18px;font-weight:bold;margin:8px 0;}</style></head><body><div id="info">Punts: 0</div><p style="font-size:13px;color:#555;margin:4px 0;">Clica el canvas i mou amb ← → ↑ ↓</p><canvas id="canvas" width="320" height="240" tabindex="0"></canvas></body></html>'
+             data-code='const canvas = document.querySelector("#canvas");
+const ctx = canvas.getContext("2d");
+const info = document.querySelector("#info");
+
+const jugador = { x: 20, y: 20, mida: 24 };
+let objectiu = { x: 200, y: 150, mida: 20 };
+let punts = 0;
+
+function colisiona(a, b) {
+  return a.x < b.x + b.mida &&
+         a.x + a.mida > b.x &&
+         a.y < b.y + b.mida &&
+         a.y + a.mida > b.y;
+}
+
+function nouObjectiu() {
+  objectiu.x = Math.floor(Math.random() * (canvas.width  - 20));
+  objectiu.y = Math.floor(Math.random() * (canvas.height - 20));
+}
+
+canvas.addEventListener("keydown", function(e) {
+  const pas = 12;
+  if (e.key === "ArrowLeft")  jugador.x -= pas;
+  if (e.key === "ArrowRight") jugador.x += pas;
+  if (e.key === "ArrowUp")    jugador.y -= pas;
+  if (e.key === "ArrowDown")  jugador.y += pas;
+});
+
+function frame() {
+  // Col·lisió
+  if (colisiona(jugador, objectiu)) {
+    punts++;
+    info.textContent = "Punts: " + punts;
+    nouObjectiu();
+  }
+
+  // Dibuixar
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "tomato";
+  ctx.fillRect(objectiu.x, objectiu.y, objectiu.mida, objectiu.mida);
+
+  ctx.fillStyle = "steelblue";
+  ctx.fillRect(jugador.x, jugador.y, jugador.mida, jugador.mida);
+
+  requestAnimationFrame(frame);
+}
+
+frame();'
+             data-readonly="false"
+             data-height="500">
+        </div>
+
+        <p>L'has fet ja? Aquest petit programa té unes 30 línies efectives. Cada part és senzilla en si mateixa, però quan les poses juntes formen un joc real.</p>
+
+        <p>Ara modifica'l! El simulador deixa que editis el codi. Algunes idees:</p>
+        <ul>
+          <li>Canvia els colors del jugador i de l'objectiu.</li>
+          <li>Fes que el quadrat blau es pugui sortir del canvas pel costat i tornar a entrar per l'altre (en comptes de quedar-se travat).</li>
+          <li>Afegeix un comptador de temps que descompti des de 30 segons.</li>
+          <li>Fes que els objectius es moguin per ells sols.</li>
+        </ul>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           EXERCICI
+           ───────────────────────────────────────── -->
+      <section class="chapter-section chapter-exercise">
+        <h2>Exercici</h2>
+
+        <div class="exercise-enunciat">
+          Escriu la funció <code>colisiona(a, b)</code> que rep dos objectes amb <code>x</code>, <code>y</code>, <code>amp</code> i <code>alt</code>, i retorna <code>true</code> si es toquen i <code>false</code> si no.
+        </div>
+
+        <p>És exactament la funció que has vist a la secció 5, però et toca a tu escriure-la. És el "cor" matemàtic dels jocs en 2D — si la domines, pots fer-ne un munt.</p>
+
+        <div class="simulador"
+             data-code='function colisiona(a, b) {
+  // Retorna true si els dos rectangles a i b es toquen.
+  // Cada rectangle té x, y, amp (amplada), alt (alçada).
+
+}'
+             data-testcode='// Tests
+const r1 = { x: 10, y: 10, amp: 40, alt: 40 };
+const r2 = { x: 30, y: 30, amp: 20, alt: 20 };   // dins de r1
+const r3 = { x: 100, y: 100, amp: 10, alt: 10 }; // lluny
+const r4 = { x: 45, y: 45, amp: 20, alt: 20 };   // toca la cantonada de r1
+const r5 = { x: 50, y: 50, amp: 20, alt: 20 };   // just NO toca r1
+
+console.log("Solapats:", colisiona(r1, r2));
+console.log("Llunyans:", colisiona(r1, r3));
+console.log("Toquen:", colisiona(r1, r4));
+console.log("Just no:", colisiona(r1, r5));
+console.log("Mateix:", colisiona(r1, r1));'
+             data-expected='Solapats: true
+Llunyans: false
+Toquen: true
+Just no: false
+Mateix: true'
+             data-goal-id="cap-12-ex"
+             data-height="380">
+        </div>
+
+        <p>Si t'encalles, torna a la secció 5 i mira la pista. Recorda: dos rectangles es toquen si <strong>NO</strong> estan separats per cap dels quatre costats.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           FINAL
+           ───────────────────────────────────────── -->
+      <section class="chapter-section" style="background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: 8px; padding: 20px; margin-top: 2rem; border-left: 0;">
+        <h2 style="border:0; margin-top:0;">🎉 Has acabat el curs!</h2>
+
+        <p>Has recorregut un camí llarg. Has après:</p>
+        <ul>
+          <li>Variables, tipus, operacions, decisions, bucles, arrays, objectes, funcions.</li>
+          <li>Manipular el DOM: trobar elements, canviar text i estil.</li>
+          <li>Reaccionar a esdeveniments del ratolí, teclat, formularis.</li>
+          <li>Dibuixar al canvas i fer-ho moure amb animacions.</li>
+          <li>Detectar col·lisions i construir un mini-joc.</li>
+        </ul>
+
+        <p>Això són els fonaments. A partir d'aquí, tot el que vegis a internet sobre JavaScript construeix sobre aquesta base. Promeses, async/await, classes, frameworks com React o Vue, Node.js per servidors… tot són capes addicionals sobre el que ja saps.</p>
+
+        <p>Si vols seguir, prova els <a href="repte-1.html">reptes</a> per practicar, o comença un projecte propi. La millor manera de millorar és construir coses.</p>
+
+        <p style="margin-bottom: 0; font-size: 1.1rem;"><strong>Felicitats!</strong> 🚀</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           NAVEGACIÓ
+           ───────────────────────────────────────── -->
+      <nav class="chapter-nav" aria-label="Navegació entre capítols">
+        <a href="capitol-11.html" class="btn-nav btn-nav--prev">← Capítol anterior</a>
+        <a href="repte-1.html" class="btn-nav btn-nav--next">Reptes →</a>
+      </nav>
+
+
+    </div>
+  </main>
+</div>
+
+<script src="capitols.js"></script>
+<script>
+  injectCursLogo();
+  renderSidebar(12);
+  renderSimuladors();
+  initSidebarToggle();
+</script>
+
+<script src="../footer.js"></script>
+</body>
+</html>

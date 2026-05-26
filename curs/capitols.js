@@ -36,7 +36,7 @@ var CAPITOLS_DATA = [
   { num: 9,  titol: 'La pàgina parla (DOM)',      arxiu: 'capitol-9.html',  goalId: 'cap-9-ex' },
   { num: 10, titol: 'Esdeveniments',              arxiu: 'capitol-10.html', goalId: 'cap-10-ex' },
   { num: 11, titol: 'Canvas: dibuixar',           arxiu: 'capitol-11.html', goalId: 'cap-11-ex' },
-  { num: 12, titol: 'Animació i mini-joc',        arxiu: 'capitol-12.html', goalId: null },
+  { num: 12, titol: 'Animació i mini-joc',        arxiu: 'capitol-12.html', goalId: 'cap-12-ex' },
 ];
 
 var REPTES_DATA = [

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítol 11 — Canvas: dibuixar | JSCat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="curs.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button id="sidebar-toggle" aria-label="Mostra/amaga els capítols" aria-expanded="false">☰</button>
+  <div class="logo">
+    <span class="logo-icon"></span>
+    <span>JSCat</span>
+  </div>
+  <nav class="topbar-nav">
+    <a href="capitol-1.html" class="topbar-nav-link active">Capítols</a>
+    <a href="repte-1.html" class="topbar-nav-link">Reptes</a>
+    <a href="../index.html" class="topbar-nav-link">Simulador</a>
+  </nav>
+  <div class="topbar-actions"></div>
+</header>
+
+<div class="curs-layout">
+  <div id="sidebar-overlay" aria-hidden="true"></div>
+  <nav id="sidebar" class="curs-sidebar" aria-label="Capítols del curs">
+    <div id="sidebar-nav"></div>
+  </nav>
+
+  <main class="curs-content">
+    <div class="chapter-content-inner">
+
+
+      <!-- ─────────────────────────────────────────
+           CAPÇALERA
+           ───────────────────────────────────────── -->
+      <header class="chapter-header">
+        <span class="chapter-badge" style="background: #fef3c7; color: #92400e;">Capítol 11 · Part B</span>
+        <h1>Canvas: dibuixar</h1>
+        <p class="chapter-lead">Fins ara JavaScript canviava text i estils. Amb el <strong><code>&lt;canvas&gt;</code></strong>, una mena de "tela en blanc", podem <strong>dibuixar</strong>: rectangles, cercles, línies, colors… És la base de qualsevol joc o gràfic interactiu al navegador.</p>
+      </header>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 1 — Què és canvas
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Què és el canvas</h2>
+
+        <p>Un <code>&lt;canvas&gt;</code> és un element HTML rectangular on JavaScript pot dibuixar píxel a píxel. A l'HTML s'escriu així:</p>
+
+        <pre class="code-example">&lt;canvas id="dibuix" width="300" height="200"&gt;&lt;/canvas&gt;</pre>
+
+        <p>El <strong>width</strong> i <strong>height</strong> són la mida del llenç en píxels. Per defecte és invisible (no té cap vora), però al simulador li hem afegit un contorn per veure'l.</p>
+
+        <p>Per dibuixar-hi, primer cal trobar l'element i demanar-li el <strong>context de dibuix</strong>. El context és l'objecte que té totes les funcions per pintar:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}canvas{border:1px solid #888;}</style></head><body><canvas id="dibuix" width="200" height="120"></canvas></body></html>'
+             data-code='const canvas = document.querySelector("#dibuix");
+const ctx = canvas.getContext("2d");
+
+console.log("Tinc un canvas de", canvas.width, "x", canvas.height);
+console.log("I un context:", typeof ctx);'
+             data-readonly="true"
+             data-height="400">
+        </div>
+
+        <p><code>getContext("2d")</code> et dona un context per a dibuix en 2D. (També hi ha <code>"webgl"</code> per a 3D, però això queda fora d'aquest curs.)</p>
+
+        <p>Per convenció, la variable que guarda el context s'anomena <strong><code>ctx</code></strong>. La veuràs així a tot arreu.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 2 — Sistema de coordenades
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Sistema de coordenades</h2>
+
+        <p>Una cosa que sorprèn als nous: el <strong>punt (0, 0) està a dalt-esquerra</strong>, no a baix-esquerra com a les matemàtiques. La coordenada <strong>Y creix cap avall</strong>:</p>
+
+        <pre class="code-example">(0,0) ──────► X creix
+  │
+  │
+  ▼
+  Y creix cap avall</pre>
+
+        <p>Per tant, un punt amb Y gran està més avall a la pantalla, no més amunt. Tingues-ho present quan dibuixis: si vols posar alguna cosa "a baix", la Y ha de ser <em>més gran</em>.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 3 — fillRect
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Dibuixar rectangles plens: <code>fillRect</code></h2>
+
+        <p>La funció més bàsica és <code>ctx.fillRect(x, y, amplada, alçada)</code>. Dibuixa un rectangle ple, començant per la cantonada superior esquerra a <code>(x, y)</code>:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}canvas{border:1px solid #888;background:#fff;}</style></head><body><canvas id="dibuix" width="300" height="180"></canvas></body></html>'
+             data-code='const canvas = document.querySelector("#dibuix");
+const ctx = canvas.getContext("2d");
+
+ctx.fillRect(10, 10, 80, 60);    // a dalt-esquerra
+ctx.fillRect(150, 80, 100, 50);  // més avall i a la dreta'
+             data-readonly="true"
+             data-height="420">
+        </div>
+
+        <p>Els rectangles surten en negre per defecte. Per canviar el color, modifica <code>ctx.fillStyle</code> <strong>abans</strong> de dibuixar:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}canvas{border:1px solid #888;background:#fff;}</style></head><body><canvas id="dibuix" width="300" height="180"></canvas></body></html>'
+             data-code='const canvas = document.querySelector("#dibuix");
+const ctx = canvas.getContext("2d");
+
+ctx.fillStyle = "red";
+ctx.fillRect(10, 10, 80, 60);
+
+ctx.fillStyle = "green";
+ctx.fillRect(110, 10, 80, 60);
+
+ctx.fillStyle = "blue";
+ctx.fillRect(210, 10, 80, 60);'
+             data-readonly="true"
+             data-height="420">
+        </div>
+
+        <p>Important: <code>fillStyle</code> és com una <strong>brotxa</strong>. La canvies un cop, i tots els <code>fillRect</code> següents fan servir aquell color, fins que la tornis a canviar.</p>
+
+        <p>El color pot ser un nom CSS (<code>"red"</code>, <code>"blue"</code>, <code>"orange"</code>…), un codi hexadecimal (<code>"#ff6600"</code>), o una notació <code>rgb()</code> o <code>rgba()</code> amb transparència:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}canvas{border:1px solid #888;background:#fff;}</style></head><body><canvas id="dibuix" width="300" height="180"></canvas></body></html>'
+             data-code='const canvas = document.querySelector("#dibuix");
+const ctx = canvas.getContext("2d");
+
+ctx.fillStyle = "#ff8800";
+ctx.fillRect(10, 30, 80, 80);
+
+ctx.fillStyle = "rgb(50, 200, 100)";
+ctx.fillRect(80, 60, 80, 80);
+
+ctx.fillStyle = "rgba(0, 0, 255, 0.5)";  // 50% transparent
+ctx.fillRect(150, 30, 80, 80);'
+             data-readonly="true"
+             data-height="420">
+        </div>
+
+        <p>Fixa't en la transparència del rectangle blau: es veu com el verd passa per darrere. <code>rgba</code> té quatre valors: vermell, verd, blau (0-255) i alfa (0 = invisible, 1 = opac).</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 4 — strokeRect
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Rectangles buits: <code>strokeRect</code></h2>
+
+        <p>Per dibuixar només el contorn (sense omplir), s'usa <code>ctx.strokeRect</code>. El color es controla amb <code>ctx.strokeStyle</code>, i el gruix de la línia amb <code>ctx.lineWidth</code>:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}canvas{border:1px solid #888;background:#fff;}</style></head><body><canvas id="dibuix" width="300" height="180"></canvas></body></html>'
+             data-code='const canvas = document.querySelector("#dibuix");
+const ctx = canvas.getContext("2d");
+
+ctx.strokeStyle = "purple";
+ctx.lineWidth = 2;
+ctx.strokeRect(10, 10, 80, 60);
+
+ctx.lineWidth = 8;
+ctx.strokeRect(110, 10, 80, 60);
+
+ctx.strokeStyle = "orange";
+ctx.lineWidth = 4;
+ctx.strokeRect(210, 10, 80, 60);'
+             data-readonly="true"
+             data-height="420">
+        </div>
+
+        <p>Com amb <code>fillStyle</code>, <code>strokeStyle</code> i <code>lineWidth</code> persisteixen fins que les canvies.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 5 — Cercles amb arc
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Cercles: <code>arc</code></h2>
+
+        <p>Per als cercles cal una mica més de codi. La funció <code>ctx.arc(x, y, radi, anglesInici, anglesFi)</code> dibuixa un arc, i per fer un cercle complet hem de donar la volta sencera (0 fins a 2π):</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}canvas{border:1px solid #888;background:#fff;}</style></head><body><canvas id="dibuix" width="300" height="180"></canvas></body></html>'
+             data-code='const canvas = document.querySelector("#dibuix");
+const ctx = canvas.getContext("2d");
+
+ctx.fillStyle = "tomato";
+ctx.beginPath();
+ctx.arc(80, 90, 40, 0, 2 * Math.PI);
+ctx.fill();
+
+ctx.fillStyle = "skyblue";
+ctx.beginPath();
+ctx.arc(220, 90, 60, 0, 2 * Math.PI);
+ctx.fill();'
+             data-readonly="true"
+             data-height="420">
+        </div>
+
+        <p>Cal seguir aquest patró sempre per dibuixar formes corbes:</p>
+        <ol>
+          <li><code>ctx.beginPath()</code> — «comença un nou camí».</li>
+          <li><code>ctx.arc(x, y, radi, 0, 2 * Math.PI)</code> — descriu el cercle.</li>
+          <li><code>ctx.fill()</code> per omplir-lo (o <code>ctx.stroke()</code> per al contorn).</li>
+        </ol>
+
+        <p>Sense <code>beginPath()</code>, els cercles consecutius es connecten i fan figures rares. <code>2 * Math.PI</code> són els 360° en radians — així es completa la volta. <code>Math.PI</code> és el nombre PI (≈ 3.14159), una constant que ja existeix.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 6 — Esborrar el canvas
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Esborrar el canvas: <code>clearRect</code></h2>
+
+        <p>Per esborrar un rectangle (deixar-lo transparent), s'usa <code>ctx.clearRect(x, y, w, h)</code>. Per esborrar tot el canvas, esborres un rectangle de la mida total:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}canvas{border:1px solid #888;background:#fff;}</style></head><body><canvas id="dibuix" width="300" height="180"></canvas></body></html>'
+             data-code='const canvas = document.querySelector("#dibuix");
+const ctx = canvas.getContext("2d");
+
+ctx.fillStyle = "green";
+ctx.fillRect(0, 0, 300, 180);   // omplir tot
+console.log("Pintat de verd...");
+
+ctx.clearRect(50, 30, 200, 120);  // forat al mig
+console.log("Forat al mig fet.");'
+             data-readonly="true"
+             data-height="420">
+        </div>
+
+        <p>Aquesta funció serà clau al capítol següent: per fer animacions, esborrem el frame anterior i tornem a dibuixar al nou lloc.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 7 — Combinar amb bucles
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Combinant amb bucles</h2>
+
+        <p>Aquí és on tot el que has après pren sentit. Un bucle pot dibuixar centenars de formes amb molt poc codi. Mira aquest patró de quadrats:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}canvas{border:1px solid #888;background:#fff;}</style></head><body><canvas id="dibuix" width="300" height="180"></canvas></body></html>'
+             data-code='const canvas = document.querySelector("#dibuix");
+const ctx = canvas.getContext("2d");
+
+for (let i = 0; i < 10; i++) {
+  ctx.fillStyle = `hsl(${i * 36}, 70%, 50%)`;
+  ctx.fillRect(20 + i * 28, 70, 20, 40);
+}'
+             data-readonly="true"
+             data-height="420">
+        </div>
+
+        <p>Els colors van canviant gradualment perquè estem usant <code>hsl()</code> (Hue, Saturació, Lluminositat) i fem variar la <em>Hue</em> de 0 a 324 graus — tot l'arc de l'arc iris.</p>
+
+        <p>Amb dos bucles niats, pots fer una <strong>graella</strong> de formes:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}canvas{border:1px solid #888;background:#fff;}</style></head><body><canvas id="dibuix" width="300" height="200"></canvas></body></html>'
+             data-code='const canvas = document.querySelector("#dibuix");
+const ctx = canvas.getContext("2d");
+
+for (let fila = 0; fila < 5; fila++) {
+  for (let col = 0; col < 7; col++) {
+    if ((fila + col) % 2 === 0) {
+      ctx.fillStyle = "darkgreen";
+    } else {
+      ctx.fillStyle = "lightgreen";
+    }
+    ctx.fillRect(col * 40 + 10, fila * 36 + 10, 36, 32);
+  }
+}'
+             data-readonly="true"
+             data-height="440">
+        </div>
+
+        <p>Hem dibuixat un patró d'escaquer en 5 línies efectives de codi. Aquesta combinació «bucles + canvas» és la base de tot el que dibuixarem al capítol següent.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 8 — Errors típics
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Errors típics</h2>
+
+        <p><strong>1. Oblidar <code>beginPath()</code></strong> abans d'un cercle nou. Si dibuixes diversos arcs sense <code>beginPath</code>, totes les formes queden connectades i la pintura surt malament:</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}canvas{border:1px solid #888;background:#fff;}</style></head><body><canvas id="dibuix" width="300" height="180"></canvas></body></html>'
+             data-code='const canvas = document.querySelector("#dibuix");
+const ctx = canvas.getContext("2d");
+
+// BUG: cap beginPath entre arcs
+ctx.fillStyle = "red";
+ctx.arc(80, 90, 30, 0, 2 * Math.PI);
+ctx.fill();
+ctx.arc(200, 90, 30, 0, 2 * Math.PI);
+ctx.fill();'
+             data-readonly="true"
+             data-height="420">
+        </div>
+
+        <p>El segon cercle es dibuixa correctament, però el primer crida ara comparteix camí amb el segon i es repinta de manera estranya. Posa <code>ctx.beginPath()</code> abans de cada <code>arc</code>.</p>
+
+        <p><strong>2. Posar el color <em>després</em> de dibuixar</strong>:</p>
+
+        <pre class="code-example">// ✗ INCORRECTE — surt en negre (el color encara no s'havia canviat)
+ctx.fillRect(10, 10, 50, 50);
+ctx.fillStyle = "red";
+
+// ✓ CORRECTE — primer canvies el color, després dibuixes
+ctx.fillStyle = "red";
+ctx.fillRect(10, 10, 50, 50);</pre>
+
+        <p><strong>3. Pensar que Y creix cap amunt</strong> — molts dibuixos surten al revés perquè confonem la convenció de les matemàtiques amb la de la pantalla. Recorda: <strong>Y gran = més avall</strong>.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           EXERCICI
+           ───────────────────────────────────────── -->
+      <section class="chapter-section chapter-exercise">
+        <h2>Exercici</h2>
+
+        <div class="exercise-enunciat">
+          Escriu una funció <code>dibuixaQuadrat(ctx, x, y, mida, color)</code> que dibuixi un quadrat ple de la mida i color donats a la posició <code>(x, y)</code>.
+        </div>
+
+        <p>La funció no ha d'imprimir res; només ha de canviar el <code>fillStyle</code> i cridar <code>fillRect</code> per dibuixar.</p>
+
+        <p>El simulador té un canvas i un codi que crida la teva funció diverses vegades per dibuixar un patró colorit. Si la teva funció és correcta, veuràs un patró bonic a la pàgina viva.</p>
+
+        <div class="simulador"
+             data-mode="dom"
+             data-html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:16px;margin:0;}canvas{border:1px solid #888;background:#fff;}</style></head><body><canvas id="dibuix" width="300" height="180"></canvas></body></html>'
+             data-code='function dibuixaQuadrat(ctx, x, y, mida, color) {
+  // Escriu el codi aquí
+
+}
+
+// Codi que crida la teva funció (no el toquis):
+const canvas = document.querySelector("#dibuix");
+const ctx = canvas.getContext("2d");
+const colors = ["red", "orange", "yellow", "green", "blue"];
+for (let i = 0; i < 5; i++) {
+  dibuixaQuadrat(ctx, 20 + i * 55, 60, 50, colors[i]);
+}'
+             data-testcode='// Validació amb un ctx mockejat:
+let _crides = [];
+const _mockCtx = {
+  _color: null,
+  set fillStyle(v) { this._color = v; _crides.push({tipus:"fillStyle", v}); },
+  get fillStyle() { return this._color; },
+  fillRect(...args) { _crides.push({tipus:"fillRect", args}); }
+};
+
+dibuixaQuadrat(_mockCtx, 10, 20, 40, "purple");
+
+// Comprovacions
+const colorSetting = _crides.find(c => c.tipus === "fillStyle");
+const fillRect = _crides.find(c => c.tipus === "fillRect");
+console.log("Color:", colorSetting ? colorSetting.v : "(no posat)");
+console.log("FillRect:", fillRect ? fillRect.args.join(",") : "(no cridat)");
+console.log("Ordre OK:", _crides[0]?.tipus === "fillStyle" && _crides[1]?.tipus === "fillRect" ? "sí" : "no");'
+             data-expected='Color: purple
+FillRect: 10,20,40,40
+Ordre OK: sí'
+             data-goal-id="cap-11-ex"
+             data-height="500">
+        </div>
+
+        <p>El test comprova tres coses: que poses el color correctament, que crides <code>fillRect</code> amb els arguments correctes (<code>x</code>, <code>y</code>, <code>mida</code>, <code>mida</code>), i que ho fas en l'ordre correcte (primer color, després dibuix).</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           RESUM
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Resum</h2>
+        <ul>
+          <li><code>&lt;canvas width="W" height="H"&gt;</code> és una tela on JavaScript pot dibuixar.</li>
+          <li><code>ctx = canvas.getContext("2d")</code> et dona l'API de dibuix.</li>
+          <li>Coordenades: <strong>(0,0) a dalt-esquerra, Y creix cap avall</strong>.</li>
+          <li><code>ctx.fillStyle</code> + <code>ctx.fillRect(x,y,w,h)</code> — rectangle ple.</li>
+          <li><code>ctx.strokeStyle</code> + <code>ctx.lineWidth</code> + <code>ctx.strokeRect(...)</code> — rectangle buit.</li>
+          <li>Cercles: <code>beginPath()</code> → <code>arc(x,y,r,0,2*Math.PI)</code> → <code>fill()</code>.</li>
+          <li><code>ctx.clearRect(x,y,w,h)</code> esborra una zona del canvas.</li>
+          <li>Colors com <code>"red"</code>, <code>"#ff6600"</code>, <code>rgb(...)</code>, <code>rgba(...)</code> per a transparència, <code>hsl(...)</code> per a gradients de color.</li>
+          <li>Bucles + canvas = patrons amb molt poc codi.</li>
+        </ul>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           NAVEGACIÓ
+           ───────────────────────────────────────── -->
+      <nav class="chapter-nav" aria-label="Navegació entre capítols">
+        <a href="capitol-10.html" class="btn-nav btn-nav--prev">← Capítol anterior</a>
+        <a href="capitol-12.html" class="btn-nav btn-nav--next">Capítol següent →</a>
+      </nav>
+
+
+    </div>
+  </main>
+</div>
+
+<script src="capitols.js"></script>
+<script>
+  injectCursLogo();
+  renderSidebar(11);
+  renderSimuladors();
+  initSidebarToggle();
+</script>
+
+<script src="../footer.js"></script>
+</body>
+</html>
