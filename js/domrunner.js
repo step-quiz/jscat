@@ -1,10 +1,7 @@
 // ════════════════════════════════════════════════════════
 // domrunner.js — Execució del codi de l'alumne dins d'un iframe
 //
-// Per a la Part B del curs (capítols 9-12). A diferència del Worker:
-//   - L'iframe SÍ té DOM (document, window, addEventListener, canvas...)
-//   - NO podem matar bucles infinits amb terminate(); cal avisar
-//   - El codi de l'alumne pot manipular la pàgina visualment
+// Per a la Part B del curs (capítols 9-12).
 //
 // API pública:
 //   J.domInit(htmlBase)           — prepara l'iframe amb un HTML base
@@ -12,14 +9,19 @@
 //   J.domRunAsync(code)           — Promise<output|null>
 //   J.domReset()                  — recarrega l'iframe (estat net)
 //
-// Embolcallem tot dins una IIFE per evitar col·lisions de noms amb
-// jsrunner.js (totes dues declaren _onDone i _currentOutput).
+// Flux d'execució:
+//   1. domRun() reassigna iframe.srcdoc i registra iframe.onload
+//   2. Quan l'iframe carrega (event 'load'), el bootstrap interior
+//      ja s'ha executat i ha sobreescrit console.* i addEventListener('message',...)
+//   3. Llavors enviem el codi via postMessage('run', code) a iframe.contentWindow
+//   4. El bootstrap fa (0,eval)(code) i ens retorna stdout/done/error
+//
+// Embolcallem tot dins una IIFE per evitar col·lisions amb jsrunner.js.
 // ════════════════════════════════════════════════════════
 
 (function() {
 
 // ── Script que s'injecta a cada iframe ──────────────────
-// Captura console.log/error i comunica amb el pare per postMessage.
 const _IFRAME_BOOTSTRAP = `
 <script>
 (function() {
@@ -73,19 +75,16 @@ const _IFRAME_BOOTSTRAP = `
       });
     }
   });
-
-  _send('ready', {});
 })();
 <\/script>
 `;
 
 
-// ── Estat intern (local a la IIFE) ───────────────────────
+// ── Estat intern ────────────────────────────────────────
 let _onDone        = null;
 let _currentOutput = [];
 let _msgHandler    = null;
 let _htmlBase      = '<!DOCTYPE html><html><body></body></html>';
-let _pendingCode   = null;
 
 
 // ── Construir l'srcdoc complet ──────────────────────────
@@ -99,32 +98,33 @@ function _buildSrcdoc(htmlBase) {
 }
 
 
-// ── Inicialitza l'iframe amb un HTML base ───────────────
-function domInit(htmlBase) {
-  _htmlBase = htmlBase || _htmlBase;
-  const iframe = document.getElementById('dom-iframe');
-  if (!iframe) return;
-
-  // Instal·lem el listener ABANS d'assignar srcdoc, perquè en alguns
-  // navegadors la càrrega de srcdoc pot ser molt ràpida i el 'ready'
-  // arribar abans que tinguem el listener.
-  if (_msgHandler) window.removeEventListener('message', _msgHandler);
+// ── Listener de missatges (instal·lat un cop) ───────────
+function _installListener() {
+  if (_msgHandler) return;
   _msgHandler = function(e) {
     // No filtrem per e.source: l'iframe té sandbox sense allow-same-origin,
-    // així que el seu origin és opaque i la comparació e.source ===
-    // iframe.contentWindow pot fallar en alguns navegadors. La marca
-    // __jscat als missatges ja és prou específica per identificar-los.
+    // així que el seu origin és opaque i e.source no és comparable de forma
+    // fiable. La marca __jscat ja és prou específica.
     if (!e.data || !e.data.__jscat) return;
     const h = _handlers[e.data.type];
     if (h) h(e.data);
   };
   window.addEventListener('message', _msgHandler);
+}
 
+
+// ── Inicialitza l'iframe amb un HTML base (sense executar codi) ──
+function domInit(htmlBase) {
+  _htmlBase = htmlBase || _htmlBase;
+  _installListener();
+  const iframe = document.getElementById('dom-iframe');
+  if (!iframe) return;
+  iframe.onload = null;   // no executem codi a la càrrega inicial
   iframe.srcdoc = _buildSrcdoc(_htmlBase);
 }
 
 
-// ── Consola petita del mode DOM ──────────────────────────
+// ── Consola petita del mode DOM ─────────────────────────
 function _domConsolePush(text, type) {
   const el = document.getElementById('dom-console-output');
   if (!el) return;
@@ -143,13 +143,6 @@ function _domConsoleClear() {
 
 // ── Handlers de missatges des de l'iframe ───────────────
 const _handlers = {
-  ready: function() {
-    if (_pendingCode) {
-      const code = _pendingCode;
-      _pendingCode = null;
-      _doRun(code);
-    }
-  },
   stdout: function(d) {
     _domConsolePush(d.text, 'out');
     _currentOutput.push(d.text);
@@ -174,19 +167,15 @@ const _handlers = {
 };
 
 
-// ── Execució ─────────────────────────────────────────────
-function _doRun(code) {
+// ── Execució: recarrega l'iframe i envia el codi a 'load' ──
+function domRun(code, onDone) {
+  _installListener();
+
   const iframe = document.getElementById('dom-iframe');
-  if (!iframe || !iframe.contentWindow) {
-    _finish(null);
+  if (!iframe) {
+    if (onDone) onDone(null);
     return;
   }
-  iframe.contentWindow.postMessage({ type: 'run', code: code }, '*');
-}
-
-function domRun(code, onDone) {
-  // Recarreguem l'iframe sempre (estat net per a cada execució)
-  domInit(_htmlBase);
 
   _currentOutput = [];
   _onDone = onDone || null;
@@ -196,7 +185,22 @@ function domRun(code, onDone) {
   J.setStateUI('running');
   _domConsolePush(J.t('log.running'), 'dim');
 
-  _pendingCode = code;
+  // Quan l'iframe estigui carregat (el bootstrap ja s'haurà executat),
+  // enviem el codi de l'alumne. Aquesta és la peça clau: l'event 'load'
+  // és fiable, no com el missatge 'ready' que podia perdre's.
+  iframe.onload = function() {
+    iframe.onload = null;
+    try {
+      iframe.contentWindow.postMessage({ type: 'run', code: code }, '*');
+    } catch (err) {
+      _domConsolePush('Error en enviar codi: ' + err.message, 'err');
+      J.setStateUI('error');
+      _finish(null);
+    }
+  };
+
+  // Reassignem el srcdoc per forçar una recàrrega (i un 'load' nou)
+  iframe.srcdoc = _buildSrcdoc(_htmlBase);
 }
 
 function domRunAsync(code) {
