@@ -12,16 +12,14 @@
 //   J.domRunAsync(code)           — Promise<output|null>
 //   J.domReset()                  — recarrega l'iframe (estat net)
 //
-// Flux:
-//   1. Construïm un srcdoc amb HTML base + script que captura console.log
-//   2. Quan l'iframe diu 'ready', enviem el codi de l'alumne via postMessage
-//   3. L'script dins l'iframe fa eval() i ens retorna stdout/errors
+// Embolcallem tot dins una IIFE per evitar col·lisions de noms amb
+// jsrunner.js (totes dues declaren _onDone i _currentOutput).
 // ════════════════════════════════════════════════════════
 
+(function() {
 
 // ── Script que s'injecta a cada iframe ──────────────────
 // Captura console.log/error i comunica amb el pare per postMessage.
-// El pare envia el codi de l'alumne via { type: 'run', code }.
 const _IFRAME_BOOTSTRAP = `
 <script>
 (function() {
@@ -38,7 +36,6 @@ const _IFRAME_BOOTSTRAP = `
             if (seen.has(v)) return '[circular]';
             seen.add(v);
           }
-          // Per a Elements del DOM
           if (v && v.nodeName) return '<' + v.nodeName.toLowerCase() + '>';
           return v;
         }, 2);
@@ -59,9 +56,6 @@ const _IFRAME_BOOTSTRAP = `
   console.error = function() { _send('stderr', { text: _fmtArgs(arguments) }); };
   console.debug = function() { _send('stdout', { text: _fmtArgs(arguments) }); };
 
-  // alert/prompt/confirm en mode DOM són els reals del navegador (apareixerà el popup).
-  // No els sobreescrivim perquè a la Part B no es fan servir gaire.
-
   window.addEventListener('error', function(e) {
     _send('error', { msg: (e.error && e.error.name ? e.error.name + ': ' : '') + (e.message || String(e)), line: e.lineno || null });
   });
@@ -69,7 +63,6 @@ const _IFRAME_BOOTSTRAP = `
   window.addEventListener('message', function(e) {
     if (!e.data || e.data.type !== 'run') return;
     try {
-      // Executem en context global; (0, eval) evita capturar l'àmbit local
       (0, eval)(e.data.code);
       _send('done', {});
     } catch (err) {
@@ -87,17 +80,16 @@ const _IFRAME_BOOTSTRAP = `
 `;
 
 
-// ── Estat intern ─────────────────────────────────────────
+// ── Estat intern (local a la IIFE) ───────────────────────
 let _onDone        = null;
-let _domReady      = false;
 let _currentOutput = [];
 let _msgHandler    = null;
 let _htmlBase      = '<!DOCTYPE html><html><body></body></html>';
+let _pendingCode   = null;
 
 
 // ── Construir l'srcdoc complet ──────────────────────────
 function _buildSrcdoc(htmlBase) {
-  // Inserim el bootstrap just abans del </body> (o al final si no n'hi ha)
   const lower = htmlBase.toLowerCase();
   const idx = lower.lastIndexOf('</body>');
   if (idx !== -1) {
@@ -113,10 +105,8 @@ function domInit(htmlBase) {
   const iframe = document.getElementById('dom-iframe');
   if (!iframe) return;
 
-  _domReady = false;
   iframe.srcdoc = _buildSrcdoc(_htmlBase);
 
-  // Reemplacem el listener
   if (_msgHandler) window.removeEventListener('message', _msgHandler);
   _msgHandler = function(e) {
     if (!e.data || !e.data.__jscat) return;
@@ -128,7 +118,7 @@ function domInit(htmlBase) {
 }
 
 
-// ── Imprimeix a la consola petita del mode DOM ──────────
+// ── Consola petita del mode DOM ──────────────────────────
 function _domConsolePush(text, type) {
   const el = document.getElementById('dom-console-output');
   if (!el) return;
@@ -145,11 +135,9 @@ function _domConsoleClear() {
 }
 
 
-// ── Handlers ─────────────────────────────────────────────
+// ── Handlers de missatges des de l'iframe ───────────────
 const _handlers = {
   ready: function() {
-    _domReady = true;
-    // Si hi havia codi pendent, l'executem ara
     if (_pendingCode) {
       const code = _pendingCode;
       _pendingCode = null;
@@ -181,8 +169,6 @@ const _handlers = {
 
 
 // ── Execució ─────────────────────────────────────────────
-let _pendingCode = null;
-
 function _doRun(code) {
   const iframe = document.getElementById('dom-iframe');
   if (!iframe || !iframe.contentWindow) {
@@ -204,7 +190,6 @@ function domRun(code, onDone) {
   J.setStateUI('running');
   _domConsolePush(J.t('log.running'), 'dim');
 
-  // Quan l'iframe estigui llest (rep 'ready'), executarem
   _pendingCode = code;
 }
 
@@ -220,7 +205,6 @@ function domReset() {
 }
 
 
-// ── Finalització ─────────────────────────────────────────
 function _finish(output) {
   const cb = _onDone;
   _onDone = null;
@@ -228,10 +212,12 @@ function _finish(output) {
 }
 
 
-// ── Exporta ──────────────────────────────────────────────
-J.domInit      = domInit;
-J.domRun       = domRun;
-J.domRunAsync  = domRunAsync;
-J.domReset     = domReset;
+// ── Exporta a J ──────────────────────────────────────────
+J.domInit         = domInit;
+J.domRun          = domRun;
+J.domRunAsync     = domRunAsync;
+J.domReset        = domReset;
 J.domConsolePush  = _domConsolePush;
 J.domConsoleClear = _domConsoleClear;
+
+})();

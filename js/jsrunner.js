@@ -11,7 +11,12 @@
 //   J.jsRun(code, stdin, onDone)        — executa, callback amb output|null
 //   J.jsRunAsync(code, stdin)           — Promise<output|null>
 //   J.jsKill()                          — mata i re-spawna
+//
+// Embolcallem tot dins una IIFE per evitar col·lisions de noms amb
+// altres runners (com domrunner.js).
 // ════════════════════════════════════════════════════════
+
+(function() {
 
 
 // ── Estat ────────────────────────────────────────────────
@@ -181,3 +186,5 @@ J.jsRun      = jsRun;
 J.jsRunAsync = jsRunAsync;
 J.jsKill     = jsKill;
 J.jsInit     = _spawnWorker;
+
+})();
