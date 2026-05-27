@@ -105,16 +105,22 @@ function domInit(htmlBase) {
   const iframe = document.getElementById('dom-iframe');
   if (!iframe) return;
 
-  iframe.srcdoc = _buildSrcdoc(_htmlBase);
-
+  // Instal·lem el listener ABANS d'assignar srcdoc, perquè en alguns
+  // navegadors la càrrega de srcdoc pot ser molt ràpida i el 'ready'
+  // arribar abans que tinguem el listener.
   if (_msgHandler) window.removeEventListener('message', _msgHandler);
   _msgHandler = function(e) {
+    // No filtrem per e.source: l'iframe té sandbox sense allow-same-origin,
+    // així que el seu origin és opaque i la comparació e.source ===
+    // iframe.contentWindow pot fallar en alguns navegadors. La marca
+    // __jscat als missatges ja és prou específica per identificar-los.
     if (!e.data || !e.data.__jscat) return;
-    if (e.source !== iframe.contentWindow) return;
     const h = _handlers[e.data.type];
     if (h) h(e.data);
   };
   window.addEventListener('message', _msgHandler);
+
+  iframe.srcdoc = _buildSrcdoc(_htmlBase);
 }
 
 
