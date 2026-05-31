@@ -113,14 +113,43 @@ function _installListener() {
 }
 
 
+// ── Crea un iframe NOU amb un srcdoc i el posa al lloc de l'antic ──
+//
+// Per què recreem l'element en comptes de reassignar-li el `srcdoc`?
+//   Reassignar `iframe.srcdoc` al MATEIX valor que ja tenia (cosa que
+//   passava aquí: el simulador es carrega amb l'HTML base i, en prémer
+//   «Executa», hi tornàvem a posar el mateix HTML base) sovint NO provoca
+//   cap navegació, de manera que l'event 'load' no es dispara mai i el codi
+//   de l'alumne no s'arribava a injectar (la consola quedava penjada a
+//   «Executant…»). A més, dues reassignacions seguides poden anul·lar-se
+//   l'event 'load' l'una a l'altra per una qüestió de temps.
+//   Un element acabat de crear, en canvi, dispara SEMPRE exactament un
+//   'load' quan el seu srcdoc acaba de carregar-se. Així l'execució és
+//   determinista.
+function _spawnIframe(srcdocStr, onLoad) {
+  const old = document.getElementById('dom-iframe');
+  if (!old) return null;
+
+  const fresh = document.createElement('iframe');
+  fresh.id = 'dom-iframe';
+  fresh.title = old.getAttribute('title') || 'Pàgina en execució';
+  fresh.setAttribute('sandbox', old.getAttribute('sandbox') || 'allow-scripts');
+
+  // Registrem el 'load' ABANS d'inserir-lo al document (amb { once: true }):
+  // l'element nou disparà un únic 'load' en connectar-se i carregar el srcdoc.
+  if (onLoad) fresh.addEventListener('load', onLoad, { once: true });
+
+  fresh.srcdoc = srcdocStr;
+  old.replaceWith(fresh);
+  return fresh;
+}
+
+
 // ── Inicialitza l'iframe amb un HTML base (sense executar codi) ──
 function domInit(htmlBase) {
   _htmlBase = htmlBase || _htmlBase;
   _installListener();
-  const iframe = document.getElementById('dom-iframe');
-  if (!iframe) return;
-  iframe.onload = null;   // no executem codi a la càrrega inicial
-  iframe.srcdoc = _buildSrcdoc(_htmlBase);
+  _spawnIframe(_buildSrcdoc(_htmlBase), null);   // només mostrem l'HTML base
 }
 
 
@@ -167,12 +196,15 @@ const _handlers = {
 };
 
 
-// ── Execució: recarrega l'iframe i envia el codi a 'load' ──
+// ── Execució: recrea l'iframe i envia el codi quan ha carregat ──
+//
+// NOTA: la consola NO es neteja aquí (ho fa qui inicia l'execució, una sola
+// vegada), perquè durant la validació volem conservar les capçaleres com
+// «── Validació ──» i la sortida acumulada entre passos.
 function domRun(code, onDone) {
   _installListener();
 
-  const iframe = document.getElementById('dom-iframe');
-  if (!iframe) {
+  if (!document.getElementById('dom-iframe')) {
     if (onDone) onDone(null);
     return;
   }
@@ -181,26 +213,27 @@ function domRun(code, onDone) {
   _onDone = onDone || null;
   J.state.running = true;
 
-  _domConsoleClear();
   J.setStateUI('running');
   _domConsolePush(J.t('log.running'), 'dim');
 
-  // Quan l'iframe estigui carregat (el bootstrap ja s'haurà executat),
-  // enviem el codi de l'alumne. Aquesta és la peça clau: l'event 'load'
-  // és fiable, no com el missatge 'ready' que podia perdre's.
-  iframe.onload = function() {
-    iframe.onload = null;
+  // Recreem l'iframe (estat net garantit) i, quan dispara el seu 'load'
+  // —el bootstrap interior ja s'ha executat i ha instal·lat el listener—,
+  // injectem el codi de l'alumne via postMessage.
+  const fresh = _spawnIframe(_buildSrcdoc(_htmlBase), function(e) {
     try {
-      iframe.contentWindow.postMessage({ type: 'run', code: code }, '*');
+      e.currentTarget.contentWindow.postMessage({ type: 'run', code: code }, '*');
     } catch (err) {
       _domConsolePush('Error en enviar codi: ' + err.message, 'err');
       J.setStateUI('error');
       _finish(null);
     }
-  };
+  });
 
-  // Reassignem el srcdoc per forçar una recàrrega (i un 'load' nou)
-  iframe.srcdoc = _buildSrcdoc(_htmlBase);
+  if (!fresh) {
+    J.state.running = false;
+    J.setStateUI('error');
+    _finish(null);
+  }
 }
 
 function domRunAsync(code) {

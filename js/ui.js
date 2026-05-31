@@ -105,8 +105,7 @@ async function runProgram() {
 
   // Neteja: la consola correcta segons el mode
   if (isDom) {
-    J.domConsoleClear();
-    J.domReset();  // reinicia l'iframe per a un estat net
+    J.domConsoleClear();   // netegem un sol cop; domRun recrearà l'iframe (estat net)
   } else {
     J.consoleClear();
     J.clearLineMarks();
