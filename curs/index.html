@@ -16,8 +16,6 @@
   </div>
   <nav class="topbar-nav">
     <a href="capitol-1.html" class="topbar-nav-link active">Capítols</a>
-    <a href="repte-1.html" class="topbar-nav-link">Reptes</a>
-    <a href="../index.html" class="topbar-nav-link">Simulador</a>
   </nav>
   <div class="topbar-actions"></div>
 </header>
@@ -25,7 +23,7 @@
 <div class="curs-index-hero">
   <h1>Aprèn JavaScript<br>al navegador, en català</h1>
   <p>
-    Capítols curts, exemples executables i reptes amb validació automàtica.
+    Capítols curts i exemples executables amb validació automàtica.
     Tot sense instal·lar res.
   </p>
 </div>
@@ -43,6 +41,7 @@
     let html = '';
 
     for (const c of CAPITOLS_DATA) {
+      if (c.num > VISIBLE_MAX_CHAPTER) continue;   // versió publicada: només 1..VISIBLE_MAX_CHAPTER
       html += `
         <li class="capitol-card">
           <a href="${c.arxiu}">
@@ -53,10 +52,11 @@
         </li>`;
     }
 
-    html += '<li style="margin:1.2rem 0;border-top:1px solid #d0d0d0"></li>';
+    if (SHOW_REPTES) {
+      html += '<li style="margin:1.2rem 0;border-top:1px solid #d0d0d0"></li>';
 
-    for (const r of REPTES_DATA) {
-      html += `
+      for (const r of REPTES_DATA) {
+        html += `
         <li class="capitol-card">
           <a href="${r.arxiu}">
             <span class="capitol-card-num">⚡${r.num}</span>
@@ -64,6 +64,7 @@
             <span class="capitol-card-arrow">→</span>
           </a>
         </li>`;
+      }
     }
 
     list.innerHTML = html;

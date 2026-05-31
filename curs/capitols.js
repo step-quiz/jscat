@@ -18,6 +18,15 @@ function injectCursLogo() {
 }
 
 
+// ── Configuració de la versió publicada ──────────────────
+// Es manté tota l'estructura del projecte (capítols, reptes i simulador),
+// però la interfície només mostra el que indiquen aquests dos interruptors.
+// Per publicar la Part B (capítols 11-12) o els reptes més endavant, només
+// cal canviar aquí: posa VISIBLE_MAX_CHAPTER = 99 i/o SHOW_REPTES = true.
+var VISIBLE_MAX_CHAPTER = 10;     // mostra només els capítols 1..10 a la UI
+var SHOW_REPTES         = false;  // amaga la secció de Reptes a la UI
+
+
 // ── Dades dels capítols ──────────────────────────────────
 // ESCALAR: afegir capítols aquí i crear el fitxer HTML corresponent.
 // goalId: identificador del repte d'exercici del capítol (null si no en té).
@@ -90,6 +99,7 @@ function renderSidebar(currentNum) {
   html += '<ul class="sidebar-list">';
   for (var i = 0; i < CAPITOLS_DATA.length; i++) {
     var c = CAPITOLS_DATA[i];
+    if (c.num > VISIBLE_MAX_CHAPTER) continue;   // versió publicada: només 1..VISIBLE_MAX_CHAPTER
     var isActive = c.num === currentNum;
     var check = (c.goalId && progress[c.goalId]) ? '<span class="sidebar-check" aria-label="completat">✓</span>' : '';
     html += '<li class="sidebar-item' + (isActive ? ' active' : '') + '">' +
