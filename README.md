@@ -150,3 +150,12 @@ Tres modes (només a través del simulador, no canvia el codi de l'alumne):
 
 Llicència **CC BY-NC-ND 4.0** — ús educatiu lliure, prohibida la comercialització
 i la modificació.
+
+<!-- atribucio-centre:inici -->
+
+---
+
+Material desenvolupat per **David Arso Civil** per al Departament de Matemàtiques de l'INS Miquel Tarradell.
+Contingut sota CC BY-NC-SA 4.0, codi sota llicència MIT. Vegeu [`LLICENCIA.md`](LLICENCIA.md).
+
+<!-- atribucio-centre:final -->
