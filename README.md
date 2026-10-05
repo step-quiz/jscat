@@ -58,7 +58,8 @@ Tot al navegador, sense instal·lació.
 
 ```
 jscat/
-├── index.html              ← Simulador (suporta mode consola i mode DOM)
+├── index.html              ← Benvinguda al curs (capítols / editor lliure)
+├── editor.html             ← Editor JS lliure (simulador: mode consola i mode DOM)
 ├── style.css               ← Estils del simulador
 │
 ├── js/

@@ -165,7 +165,7 @@ function renderSimuladors() {
     if (html)     params.set('html', btoa(unescape(encodeURIComponent(html))));
 
     var iframe = document.createElement('iframe');
-    iframe.src = '../index.html?' + params.toString();
+    iframe.src = '../editor.html?' + params.toString();
     iframe.style.width = '100%';
     iframe.style.height = height + 'px';
     iframe.style.border = '1px solid #d0d0d0';
@@ -178,7 +178,7 @@ function renderSimuladors() {
 
     // Botó pantalla completa (visible en mòbil via CSS)
     var fullscreenBtn = document.createElement('a');
-    fullscreenBtn.href = '../index.html?' + params.toString();
+    fullscreenBtn.href = '../editor.html?' + params.toString();
     fullscreenBtn.target = '_blank';
     fullscreenBtn.rel = 'noopener';
     fullscreenBtn.className = 'simulador-fullscreen-btn';

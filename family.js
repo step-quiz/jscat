@@ -48,6 +48,7 @@
     '  margin-right: 4px; text-transform: uppercase; white-space: nowrap;',
     "  font: 600 0.68rem/1 'Josefin Sans', 'Trebuchet MS', 'Segoe UI', sans-serif;",
     '  letter-spacing: 0.3em; user-select: none;',
+    '  transform: translateY(0.2em);',          /* centrat òptic: les majúscules de Josefin queden altes */
     '}',
     '.cat-label > span {',
     '  grid-area: 1 / 1; margin-right: -0.3em;', /* compensa l'espai final del letter-spacing */
@@ -97,6 +98,15 @@
     '  70%  { transform: translateX(-0.5px) rotate(-2deg); opacity: 1;   }',
     '  80%  { transform: translateX(0) rotate(0);          opacity: 1;   }',
     '  100% { transform: translateX(0) rotate(0);          opacity: 1;   }',
+    '}',
+
+    /* Pantalles amples: les 4 icones centrades horitzontalment a la capçalera,
+       i "EXPLORA" penjant a la seva esquerra (no desplaça res). */
+    '@media (min-width: 720px) {',
+    '  .topbar { position: relative; }',
+    '  .cat-family { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }',
+    '  .cat-label { position: absolute; right: calc(100% + 16px); top: 50%; margin: 0;',
+    '               transform: translateY(calc(-50% + 0.2em)); }',
     '}',
 
     /* Pantalles tàctils: sense hover, icones una mica més grans, sense nom */
