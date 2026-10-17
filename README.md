@@ -16,7 +16,8 @@ experiència prèvia). Combina:
 - **Part B — JavaScript al navegador** (capítols 9–12): DOM, esdeveniments, canvas,
   animació i un mini-joc final. Aquí JS brilla amb el que el fa únic.
 
-El curs consta de **12 capítols** i **13 reptes** amb validació automàtica.
+El curs està pensat per tenir **12 capítols** i **13 reptes** amb validació automàtica
+(ara mateix hi ha els 12 capítols escrits i 1 repte).
 Tot al navegador, sense instal·lació.
 
 ## Estat actual
@@ -34,14 +35,24 @@ Tot al navegador, sense instal·lació.
 | 8 | Objectes | ✅ Escrit |
 | 9 | La pàgina parla (DOM) | ✅ Escrit |
 | 10 | Esdeveniments | ✅ Escrit |
-| 11 | Canvas: dibuixar | ⏳ Per escriure |
-| 12 | Animació i mini-joc | ⏳ Per escriure |
+| 11 | Canvas: dibuixar | ✅ Escrit (ocult) |
+| 12 | Animació i mini-joc | ✅ Escrit (ocult) |
 
 ### Reptes
 | # | Títol | Estat |
 |---|-------|-------|
 | 1 | El primer programa | ✅ Escrit |
-| 2-13 | Reptes finals | ⏳ Per escriure |
+| 2-13 | Reptes finals | ⏳ Per escriure (definits a `capitols.js`, sense fitxer HTML) |
+
+### Què es publica
+
+Els interruptors de `curs/capitols.js` decideixen què es veu a la interfície:
+
+- `VISIBLE_MAX_CHAPTER = 10`: només es mostren els capítols 1–10. Els capítols 11 i 12 ja
+  estan escrits però queden amagats.
+- `SHOW_REPTES = false`: la secció de reptes no es mostra.
+
+Per publicar els capítols 11–12 o els reptes, n'hi ha prou de canviar aquests dos valors.
 
 ### Infraestructura
 
@@ -63,7 +74,8 @@ jscat/
 ├── style.css               ← Estils del simulador
 │
 ├── js/
-│   ├── constants.js        ← Configuració global, claus localStorage
+│   ├── constants.js        ← Configuració global (timeout 5 s), claus localStorage
+│   │                         (jscat_code, jscat-theme, jscat_progress)
 │   ├── i18n.js             ← Sistema de traduccions
 │   ├── state.js            ← Estat centralitzat (namespace J)
 │   ├── jsrunner.js         ← Wrapper del Worker (mode consola)
@@ -76,15 +88,18 @@ jscat/
 │
 ├── curs/
 │   ├── index.html          ← Índex del curs
-│   ├── capitol-1..10.html  ← Capítols escrits
-│   ├── repte-1.html        ← Reptes escrits
-│   ├── capitols.js         ← Dades dels capítols/reptes + renderers
+│   ├── capitol-1..12.html  ← Capítols (11 i 12 ocults)
+│   ├── repte-1.html        ← Únic repte escrit
+│   ├── capitols.js         ← Dades dels capítols/reptes, interruptors de publicació + renderers
 │   └── curs.css            ← Estils del curs
 │
 ├── img/
-│   └── cc-by-nc-nd.png
-├── footer.js               ← Footer comú CC BY-NC-ND
-├── LICENSE
+│   ├── cc-by-nc-nd.png     ← Botó de llicència del footer
+│   └── karelcat.svg, pycat.svg, jscat.svg, htmlcat.svg ← Icones de la família
+├── family.js               ← Selector "EXPLORA" dels projectes germans (KarelCat, PyCat, JSCat, HTMLCat)
+├── footer.js               ← Footer comú
+├── jscat-main.zip          ← Còpia antiga del projecte (7/9/2026); no la fa servir res
+├── LICENSE, LLICENCIA.md
 └── README.md
 ```
 
@@ -149,8 +164,8 @@ Tres modes (només a través del simulador, no canvia el codi de l'alumne):
 
 ## Llicència
 
-Llicència **CC BY-NC-ND 4.0** — ús educatiu lliure, prohibida la comercialització
-i la modificació.
+Contingut sota **CC BY-NC-SA 4.0** i codi sota **MIT** (vegeu `LLICENCIA.md`).
+Atenció: el peu de pàgina que genera `footer.js` encara mostra CC BY-NC-ND 4.0.
 
 <!-- atribucio-centre:inici -->
 
