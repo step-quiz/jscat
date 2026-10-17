@@ -94,7 +94,6 @@ jscat/
 │   └── curs.css            ← Estils del curs
 │
 ├── img/
-│   ├── cc-by-nc-nd.png     ← Botó de llicència del footer
 │   └── karelcat.svg, pycat.svg, jscat.svg, htmlcat.svg ← Icones de la família
 ├── family.js               ← Selector "EXPLORA" dels projectes germans (KarelCat, PyCat, JSCat, HTMLCat)
 ├── footer.js               ← Footer comú
@@ -165,7 +164,7 @@ Tres modes (només a través del simulador, no canvia el codi de l'alumne):
 ## Llicència
 
 Contingut sota **CC BY-NC-SA 4.0** i codi sota **MIT** (vegeu `LLICENCIA.md`).
-Atenció: el peu de pàgina que genera `footer.js` encara mostra CC BY-NC-ND 4.0.
+El peu de pàgina que genera `footer.js` diu el mateix.
 
 <!-- atribucio-centre:inici -->
 
