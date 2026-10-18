@@ -84,22 +84,34 @@ jscat/
 │   ├── editor.js           ← Editor de codi amb ressaltat JS
 │   ├── console.js          ← Panell de sortida + panell stdin
 │   ├── ui.js               ← Botons, validació, tema, fitxers
-│   └── main.js             ← Inicialització
+│   ├── main.js             ← Inicialització
+│   └── kbd-accessory.js    ← Barra de tecles per a pantalles tàctils (fitxer comú)
 │
 ├── curs/
 │   ├── index.html          ← Índex del curs
 │   ├── capitol-1..12.html  ← Capítols (11 i 12 ocults)
 │   ├── repte-1.html        ← Únic repte escrit
+│   ├── progress.js         ← Progrés de l'alumne (fitxer comú; clau jscat_progress)
 │   ├── capitols.js         ← Dades dels capítols/reptes, interruptors de publicació + renderers
 │   └── curs.css            ← Estils del curs
 │
+├── tools/                  ← Generador de pàgines JSON → HTML i el seu invers (vegeu tools/README.md)
+│
 ├── img/
 │   └── karelcat.svg, pycat.svg, jscat.svg, htmlcat.svg ← Icones de la família
-├── family.js               ← Selector "EXPLORA" dels projectes germans (KarelCat, PyCat, JSCat, HTMLCat)
-├── footer.js               ← Footer comú
+├── family.js               ← Selector "EXPLORA" dels projectes germans (fitxer comú)
+├── footer.js               ← Footer (fitxer comú)
 ├── LICENSE, LLICENCIA.md
 └── README.md
 ```
+
+## Fitxers comuns
+
+`LICENSE`, `LLICENCIA.md`, `family.js`, `footer.js`, `js/kbd-accessory.js`, `curs/progress.js` i les icones de la família (`img/htmlcat.svg`, `img/pycat.svg`, `img/karelcat.svg`, `img/jscat.svg`) són **fitxers comuns** dels cursos de la família: l'original és al repositori
+[step-quiz-commons](https://github.com/step-quiz/step-quiz-commons), on també hi ha què té de
+diferent aquest web (`comuns.json`). El workflow `.github/workflows/comuns.yml` els posa al dia
+cada dia (o a mà: Actions → «Fitxers comuns» → Run workflow). **No els editis aquí**: el canvi es
+perdria l'endemà. Canvia'ls a step-quiz-commons.
 
 ## Servir en local
 

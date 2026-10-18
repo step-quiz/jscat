@@ -66,26 +66,9 @@ var REPTES_DATA = [
 
 
 // ── Sistema de progrés ───────────────────────────────────
-var _LS_KEY = 'jscat_progress';
-
-function getProgress() {
-  try {
-    return JSON.parse(localStorage.getItem(_LS_KEY) || '{}');
-  } catch(_) { return {}; }
-}
-
-function saveGoalCompleted(goalId) {
-  if (!goalId) return;
-  var p = getProgress();
-  if (p[goalId]) return;
-  p[goalId] = true;
-  try { localStorage.setItem(_LS_KEY, JSON.stringify(p)); } catch(_) {}
-}
-
-function isGoalCompleted(goalId) {
-  if (!goalId) return false;
-  return !!getProgress()[goalId];
-}
+// getProgress(), saveGoalCompleted(goalId) i isGoalCompleted(goalId) són a
+// progress.js, un fitxer comú (step-quiz-commons) que cada pàgina carrega
+// abans d'aquest. La clau de localStorage no ha canviat.
 
 
 // ── Sidebar: capítols ────────────────────────────────────

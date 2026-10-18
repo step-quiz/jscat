@@ -1,6 +1,10 @@
 // ════════════════════════════════════════════════════════
 // family.js — Selector discret dels projectes "Cat"
 //
+// FITXER COMÚ: ve de step-quiz/step-quiz-commons i se sobreescriu sol.
+// No l'editis aquí: canvia'l a step-quiz-commons (fitxers/family.js) i, si
+// és una cosa només d'aquest web, a comuns.json (bloc "config").
+//
 // Mostra el text "EXPLORA" i 4 icones petites a la capçalera
 // (dins .topbar-actions). En passar-hi el ratolí per sobre:
 //   · la icona creix i fa un "shake-and-blink" d'1 segon
@@ -8,7 +12,7 @@
 //   · el text "EXPLORA" és substituït pel nom del projecte
 //
 // ESCALAR: per afegir un projecte nou, només cal afegir una
-// línia a CAT_PROJECTS i la seva icona a img/.
+// línia a CAT_PROJECTS (a step-quiz-commons) i la seva icona a img/.
 // ════════════════════════════════════════════════════════
 (function () {
   // En mode embed (iframes del curs) la capçalera està amagada: no cal res.
@@ -16,7 +20,17 @@
     if (new URLSearchParams(location.search).get('embed') === '1') return;
   } catch (e) { /* ignore */ }
 
-  var CURRENT = 'jscat';   // projecte actual (no és enllaç)
+  // Configuració d'aquest web (la hi posa sincronitza.py a partir de comuns.json):
+  //   actual       → id del projecte actual (no és un enllaç)
+  //   centraDesDe  → amplada (px) a partir de la qual les icones van centrades a la capçalera
+  //   amagaNomSota → amplada (px) per sota de la qual s'amaga el text "EXPLORA"
+  //   amagaTotSota → amplada (px) per sota de la qual s'amaga tot el selector (0 = mai)
+  //   posicio      → 'final' (al final de .topbar-actions) o 'inici' (al principi)
+  var CONFIG = {"actual": "jscat"};
+  var CURRENT = CONFIG.actual || '';
+  var CENTRA_DES_DE = CONFIG.centraDesDe || 720;
+  var AMAGA_NOM_SOTA = CONFIG.amagaNomSota || 500;
+  var AMAGA_TOT_SOTA = CONFIG.amagaTotSota || 0;
 
   var CAT_PROJECTS = [
     { id: 'htmlcat',  nom: 'HTMLCat',  url: 'https://htmlcat.step-quiz.net',  icona: 'htmlcat.svg'  },
@@ -102,7 +116,7 @@
 
     /* Pantalles amples: les 4 icones centrades horitzontalment a la capçalera,
        i "EXPLORA" penjant a la seva esquerra (no desplaça res). */
-    '@media (min-width: 720px) {',
+    '@media (min-width: ' + CENTRA_DES_DE + 'px) {',
     '  .topbar { position: relative; }',
     '  .cat-family { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }',
     '  .cat-label { position: absolute; right: calc(100% + 16px); top: 50%; margin: 0;',
@@ -114,10 +128,11 @@
     '  .cat-family-item { width: 20px; height: 20px; opacity: .8; filter: none; }',
     '  .cat-name { display: none; }',
     '}',
-    '@media (max-width: 500px) {',
+    '@media (max-width: ' + AMAGA_NOM_SOTA + 'px) {',
     '  .cat-family { gap: 9.6px; }',
     '  .cat-label { display: none; }',
     '}',
+    AMAGA_TOT_SOTA ? '@media (max-width: ' + AMAGA_TOT_SOTA + 'px) {\n  .cat-family { display: none; }\n}' : '',
     '@media (prefers-reduced-motion: reduce) {',
     '  .cat-family-item, .cat-label > span { transition: none; }',
     '  .cat-family-item.is-active img { animation: none; }',
@@ -193,5 +208,6 @@
     nav.appendChild(el);
   });
 
-  host.appendChild(nav);
+  if (CONFIG.posicio === 'inici') host.insertBefore(nav, host.firstChild);
+  else host.appendChild(nav);
 })();
