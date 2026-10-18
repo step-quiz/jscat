@@ -161,6 +161,10 @@ Tres modes (només a través del simulador, no canvia el codi de l'alumne):
   funcions amb diversos arguments, o (mode DOM) per disparar clics
   programàticament amb `element.click()` i comprovar l'estat resultant.
 
+## Enllaços
+
+`.github/comprova-enllacos.py` comprova que els enllaços cap als altres webs de Step Quiz (`*.step-quiz.net`) funcionen. GitHub l'executa a cada canvi a `main`, cada dilluns al matí i a mà (`.github/workflows/enllacos.yml`, «Enllaços» a la pestanya Actions).
+
 ## Llicència
 
 Contingut sota **CC BY-NC-SA 4.0** i codi sota **MIT** (vegeu `LLICENCIA.md`).

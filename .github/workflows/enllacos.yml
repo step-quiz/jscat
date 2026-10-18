@@ -1,0 +1,32 @@
+# Comprova que els enllaços d'aquest repositori cap als webs de Step Quiz
+# (*.step-quiz.net) funcionen: .github/comprova-enllacos.py.
+# S'executa a cada canvi a main que toqui pàgines o scripts, cada dilluns al
+# matí (per si s'ha trencat un altre web) i a mà (Actions → Enllaços → Run
+# workflow). No escriu res. Si falla, GitHub envia un correu a qui en sigui
+# responsable i el detall diu quin enllaç i en quin fitxer.
+name: Enllaços
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.html'
+      - '**.js'
+      - '.github/comprova-enllacos.py'
+      - '.github/workflows/enllacos.yml'
+  schedule:
+    - cron: '17 5 * * 1'   # dilluns, 5:17 UTC (7:17 a l'estiu, 6:17 a l'hivern)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  enllacos:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Comprova els enllaços a *.step-quiz.net
+        run: python3 .github/comprova-enllacos.py
