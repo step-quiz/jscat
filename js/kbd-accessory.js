@@ -24,7 +24,7 @@
   //   disposicio → 'sota' o 'fixa'
   //   api        → nom de l'objecte global de l'editor que té editText(ta, text)
   //                i, si cal, indentSelection(ta) / dedentSelection(ta)
-  //                (p. ex. 'K' a KarelCat, 'P' a PyCat). Si no n'hi ha, s'escriu
+  //                (p. ex. 'K' a KarelCat). Si no n'hi ha, s'escriu
   //                amb una funció pròpia equivalent.
   //   tecles     → llista: "x" (escriu x), null (separador) o
   //                { "label": "if", "text": "if ", "title": "…", "accio": "indenta" | "desindenta" }
