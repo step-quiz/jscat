@@ -97,7 +97,6 @@ jscat/
 │   └── karelcat.svg, pycat.svg, jscat.svg, htmlcat.svg ← Icones de la família
 ├── family.js               ← Selector "EXPLORA" dels projectes germans (KarelCat, PyCat, JSCat, HTMLCat)
 ├── footer.js               ← Footer comú
-├── jscat-main.zip          ← Còpia antiga del projecte (7/9/2026); no la fa servir res
 ├── LICENSE, LLICENCIA.md
 └── README.md
 ```
