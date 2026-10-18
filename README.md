@@ -35,8 +35,8 @@ Tot al navegador, sense instal·lació.
 | 8 | Objectes | ✅ Escrit |
 | 9 | La pàgina parla (DOM) | ✅ Escrit |
 | 10 | Esdeveniments | ✅ Escrit |
-| 11 | Canvas: dibuixar | ✅ Escrit (ocult) |
-| 12 | Animació i mini-joc | ✅ Escrit (ocult) |
+| 11 | Canvas: dibuixar | ✅ Publicat |
+| 12 | Animació i mini-joc | ✅ Publicat |
 
 ### Reptes
 | # | Títol | Estat |
@@ -48,11 +48,11 @@ Tot al navegador, sense instal·lació.
 
 Els interruptors de `curs/capitols.js` decideixen què es veu a la interfície:
 
-- `VISIBLE_MAX_CHAPTER = 10`: només es mostren els capítols 1–10. Els capítols 11 i 12 ja
-  estan escrits però queden amagats.
+- `VISIBLE_MAX_CHAPTER = 12`: es mostren tots els capítols (els 11 i 12 es van publicar el
+  18/10/2026).
 - `SHOW_REPTES = false`: la secció de reptes no es mostra.
 
-Per publicar els capítols 11–12 o els reptes, n'hi ha prou de canviar aquests dos valors.
+Per publicar els reptes, n'hi ha prou de posar `SHOW_REPTES = true`.
 
 ### Infraestructura
 
@@ -89,7 +89,7 @@ jscat/
 │
 ├── curs/
 │   ├── index.html          ← Índex del curs
-│   ├── capitol-1..12.html  ← Capítols (11 i 12 ocults)
+│   ├── capitol-1..12.html  ← Capítols
 │   ├── repte-1.html        ← Únic repte escrit
 │   ├── progress.js         ← Progrés de l'alumne (fitxer comú; clau jscat_progress)
 │   ├── capitols.js         ← Dades dels capítols/reptes, interruptors de publicació + renderers

@@ -21,9 +21,9 @@ function injectCursLogo() {
 // ── Configuració de la versió publicada ──────────────────
 // Es manté tota l'estructura del projecte (capítols, reptes i simulador),
 // però la interfície només mostra el que indiquen aquests dos interruptors.
-// Per publicar la Part B (capítols 11-12) o els reptes més endavant, només
-// cal canviar aquí: posa VISIBLE_MAX_CHAPTER = 99 i/o SHOW_REPTES = true.
-var VISIBLE_MAX_CHAPTER = 10;     // mostra només els capítols 1..10 a la UI
+// Per amagar capítols o publicar els reptes, només cal canviar aquí
+// (VISIBLE_MAX_CHAPTER i SHOW_REPTES).
+var VISIBLE_MAX_CHAPTER = 12;     // mostra els capítols 1..12 a la UI (tots)
 var SHOW_REPTES         = false;  // amaga la secció de Reptes a la UI
 
 
