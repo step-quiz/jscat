@@ -33,9 +33,11 @@ repositori, si n'hi ha més avall, manen sobre aquestes quan diuen una altra cos
 **JSCat.** Llegeix primer:
 
 - [`README.md`](README.md)
+- [`tools/README.md`](tools/README.md)
 
 Proves (des de l'arrel del repositori):
 
 ```
 python3 .github/comprova-enllacos.py
+node tools/generate-pages.js --comprova
 ```

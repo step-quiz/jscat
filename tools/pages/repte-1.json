@@ -1,0 +1,35 @@
+{
+  "type": "repte",
+  "num": 1,
+  "titol": "El primer programa",
+  "difficulty": "facil",
+  "prev": {
+    "url": "capitol-1.html",
+    "label": "← Capítol 1"
+  },
+  "next": {
+    "url": "repte-2.html",
+    "label": "Repte següent →"
+  },
+  "hint": "Necessites tres crides a <code>console.log()</code>, una per cada línia.\nRecorda posar el text entre cometes dobles: <code>console.log(\"text\");</code>.\nPer l'apòstrof de «M'encanta», pots usar cometes dobles per embolcallar el text.",
+  "sections": [
+    {
+      "parts": [
+        {
+          "h2": "Objectiu",
+          "body": "<p>Escriu un programa que imprimeixi exactament aquestes tres línies:</p>\n<pre class=\"code-example\">Hola, món!\nAixò és JavaScript.\nM'encanta programar!</pre>\n\n<p>El programa ha d'imprimir <strong>exactament</strong> aquest text — ni una lletra més, ni una lletra menys. Cada línia és una crida a <code>console.log()</code> separada.</p>"
+        },
+        {
+          "h2": "Simulador",
+          "simulador": {
+            "code": "// Repte 1: El primer programa\n// Fes que el programa imprimeixi les tres línies\n\n",
+            "expected": "Hola, món!\nAixò és JavaScript.\nM'encanta programar!",
+            "goalId": "repte-1",
+            "height": 320
+          },
+          "body": "<p>Escriu el teu codi i prem <strong>▶ Executa</strong>. El sistema verificarà automàticament si la sortida és correcta.</p>"
+        }
+      ]
+    }
+  ]
+}

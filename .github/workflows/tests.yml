@@ -1,0 +1,30 @@
+# Comprovacions de cada canvi: sintaxi dels fitxers JS i que les pàgines
+# descrites a tools/pages/*.json siguin les que hi ha a curs/.
+name: Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Sintaxi dels fitxers JS
+        run: |
+          for f in $(git ls-files '*.js'); do node --check "$f" || exit 1; done
+          echo "Sintaxi correcta a $(git ls-files '*.js' | wc -l) fitxers."
+
+      - name: Generador de pàgines ↔ curs/
+        run: node tools/generate-pages.js --comprova
