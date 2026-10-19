@@ -182,6 +182,9 @@
     var el = document.createElement(isCur ? 'span' : 'a');
     el.className = 'cat-family-item' + (isCur ? ' is-current' : '');
     if (isCur) {
+      // Un <span> sense rol no pot portar aria-label (els lectors de pantalla
+      // l'ignoren): amb role="img", la icona es llegeix «KarelCat (projecte actual)».
+      el.setAttribute('role', 'img');
       el.setAttribute('aria-current', 'page');
       el.setAttribute('aria-label', p.nom + ' (projecte actual)');
     } else {

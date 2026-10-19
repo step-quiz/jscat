@@ -104,7 +104,7 @@
       var pct = Math.round(100 * e.fets / e.total);
       html += '<p>Quan tinguis la ✓ a tots els capítols (la de la barra lateral), aquí tindràs ' +
               'el teu certificat de ' + esc(CONFIG.curs) + '.</p>' +
-              '<div class="cert-barra" role="progressbar" aria-valuemin="0" aria-valuemax="' + e.total +
+              '<div class="cert-barra" role="progressbar" aria-label="Capítols superats" aria-valuemin="0" aria-valuemax="' + e.total +
               '" aria-valuenow="' + e.fets + '"><span style="width:' + pct + '%"></span></div>' +
               '<p class="cert-compte">' + e.fets + ' de ' + e.total + ' capítols superats.</p>' +
               '<p class="cert-falten">Et falten: ' + e.falten.map(function (c) {
