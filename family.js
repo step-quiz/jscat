@@ -5,10 +5,10 @@
 // No l'editis aquí: canvia'l a step-quiz-commons (fitxers/family.js) i, si
 // és una cosa només d'aquest web, a comuns.json (bloc "config").
 //
-// Mostra el text "EXPLORA" i 4 icones petites a la capçalera
+// Mostra el text "EXPLORA" i 5 icones petites a la capçalera
 // (dins .topbar-actions). En passar-hi el ratolí per sobre:
 //   · la icona creix i fa un "shake-and-blink" d'1 segon
-//   · les altres 3 s'encongeixen un 20% i s'aclareixen un 10%
+//   · les altres 4 s'encongeixen un 20% i s'aclareixen un 10%
 //   · el text "EXPLORA" és substituït pel nom del projecte
 //
 // ESCALAR: per afegir un projecte nou, només cal afegir una
@@ -26,6 +26,8 @@
   //   amagaNomSota → amplada (px) per sota de la qual s'amaga el text "EXPLORA"
   //   amagaTotSota → amplada (px) per sota de la qual s'amaga tot el selector (0 = mai)
   //   posicio      → 'final' (al final de .topbar-actions) o 'inici' (al principi)
+  //   fontExterna  → false: no carrega la lletra de Google Fonts; «EXPLORA» surt amb la
+  //                  lletra de reserva (webs sense peticions a tercers, p. ex. LogoCat)
   var CONFIG = {"actual": "jscat"};
   var CURRENT = CONFIG.actual || '';
   var CENTRA_DES_DE = CONFIG.centraDesDe || 720;
@@ -33,6 +35,7 @@
   var AMAGA_TOT_SOTA = CONFIG.amagaTotSota || 0;
 
   var CAT_PROJECTS = [
+    { id: 'logocat',  nom: 'LogoCat',  url: 'https://logo.step-quiz.net',     icona: 'logocat.svg'  },
     { id: 'htmlcat',  nom: 'HTMLCat',  url: 'https://htmlcat.step-quiz.net',  icona: 'htmlcat.svg'  },
     { id: 'pycat',    nom: 'PyCat',    url: 'https://pycat.step-quiz.net',    icona: 'pycat.svg'    },
     { id: 'karelcat', nom: 'KarelCat', url: 'https://karelcat.step-quiz.net', icona: 'karelcat.svg' },
@@ -47,10 +50,12 @@
 
   // Tipografia del text "EXPLORA": Josefin Sans, majúscules molt espaiades
   // (aire de cartell d'expedició). Si no carrega, cau a una sans-serif normal.
-  var font = document.createElement('link');
-  font.rel = 'stylesheet';
-  font.href = 'https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600&display=swap';
-  document.head.appendChild(font);
+  if (CONFIG.fontExterna !== false) {
+    var font = document.createElement('link');
+    font.rel = 'stylesheet';
+    font.href = 'https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600&display=swap';
+    document.head.appendChild(font);
+  }
 
   var style = document.createElement('style');
   style.textContent = [
@@ -91,7 +96,7 @@
     '  background: var(--muted, #888);',
     '}',
 
-    /* Quan una icona és activa, les altres 3: -20% de mida, +10% de lluminositat */
+    /* Quan una icona és activa, les altres: -20% de mida, +10% de lluminositat */
     '.cat-family.has-active .cat-family-item:not(.is-active) {',
     '  transform: scale(0.8); filter: grayscale(0.6) brightness(1.1);',
     '}',
@@ -114,7 +119,7 @@
     '  100% { transform: translateX(0) rotate(0);          opacity: 1;   }',
     '}',
 
-    /* Pantalles amples: les 4 icones centrades horitzontalment a la capçalera,
+    /* Pantalles amples: les icones centrades horitzontalment a la capçalera,
        i "EXPLORA" penjant a la seva esquerra (no desplaça res). */
     '@media (min-width: ' + CENTRA_DES_DE + 'px) {',
     '  .topbar { position: relative; }',
